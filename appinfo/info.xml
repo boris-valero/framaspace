@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<info xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
+	<id>framaspace</id>
+	<name>Frama Space</name>
+	<summary>Application Framaspace</summary>
+	<description><![CDATA[Application destinée à améliorer l'expérience utilisateur des associations et collectifs utilisant Framaspace]]></description>
+	<version>1.0.0</version>
+	<licence>agpl</licence>
+	<author mail="bvalero@framasoft.org" homepage="https://github.com/boris-valero/">Boris Valero</author>
+    <author mail="thomas.citharel@framasoft.org" homepage="https://tcit.fr">Thomas Citharel</author>
+	<namespace>FramaSpace</namespace>
+	<category>customization</category>
+	<bugs>https://framagit.org/framasoft/framaspace/custom-apps/framaspace</bugs>
+	<dependencies>
+		<nextcloud min-version="31" max-version="32"/>
+	</dependencies>
+	<navigations>
+        <navigation>
+            <name>Aide Utilisateurs</name>
+            <route>framaspace.page.index</route>
+            <icon>help.svg</icon>
+            <order>0</order>
+            <type>settings</type>
+        </navigation>
+		<navigation>
+            <name>Aide Administrateurs</name>
+            <route>framaspace.pageadmin.index</route>
+            <icon>help.svg</icon>
+            <order>1</order>
+            <type>settings</type>
+        </navigation>
+	</navigations>
+</info>
