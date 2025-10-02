@@ -2,7 +2,6 @@
 /*.iml
 
 /vendor/
-/vendor-bin/
 /vendor-bin/*/vendor/
 
 /.php-cs-fixer.cache
