@@ -15,6 +15,7 @@
 	<dependencies>
 		<nextcloud min-version="31" max-version="32"/>
 	</dependencies>
+	<bootstrap>OCA\FramaSpace\AppInfo\Application</bootstrap>
 	<navigations>
         <navigation>
             <name>Aide Utilisateurs</name>
