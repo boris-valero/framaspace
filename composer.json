@@ -5,8 +5,7 @@
 	"authors": [
 		{
 			"name": "Boris Valero",
-			"email": "bvalero@framasoft.org",
-			"homepage": ""
+			"email": "bvalero@framasoft.org"
 		}
 	],
 	"autoload": {
