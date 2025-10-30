@@ -26,7 +26,7 @@ class Admin implements ISettings {
 			if (!is_array($entry) || !isset($entry['id']) || !is_string($entry['id'])) {
 				continue;
 			}
-			
+
 			$appId = $entry['id'];
 
 			if ($this->appManager->isInstalled($appId)) {
