@@ -1,8 +1,8 @@
 <?php
 /**
  * Template pour les paramètres administrateur Framaspace
- * 
- * @var array $_ 
+ *
+ * @var array $_
  * @var array $apps Liste des applications installées
  */
 ?>

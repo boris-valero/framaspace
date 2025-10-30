@@ -18,7 +18,7 @@ class Admin implements ISettings {
 	public function getForm(): TemplateResponse {
 		// Récupérer la liste des applications installées
 		$installedApps = $this->appManager->getInstalledApps();
-		
+
 		// Préparer les données pour le template
 		$appsData = [];
 		foreach ($installedApps as $appId) {
