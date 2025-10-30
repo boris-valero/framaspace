@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace OCA\FramaSpace\AppInfo;
 
-use OCA\FramaSpace\Settings\Admin;
-use OCA\FramaSpace\Settings\AdminSection;
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
@@ -23,8 +21,8 @@ class Application extends App implements IBootstrap {
 	}
 
 	public function register(IRegistrationContext $context): void {
-		$context->registerSettingsSection(AdminSection::class);
-		$context->registerSettings(Admin::class);
+		// Les paramètres d'administration sont déclarés dans appinfo/info.xml
+		// Pas besoin de les enregistrer ici
 	}
 
 	public function boot(IBootContext $context): void {
