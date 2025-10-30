@@ -31,4 +31,8 @@
             <type>settings</type>
         </navigation>
 	</navigations>
+	<settings>
+    	<admin>OCA\FramaSpace\Settings\Admin</admin>
+    	<admin-section>OCA\FramaSpace\Settings\AdminSection</admin-section>
+	</settings>
 </info>

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace OCA\FramaSpace\AppInfo;
 
+use OCA\FramaSpace\Settings\Admin;
+use OCA\FramaSpace\Settings\AdminSection;
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
@@ -21,6 +23,8 @@ class Application extends App implements IBootstrap {
 	}
 
 	public function register(IRegistrationContext $context): void {
+		$context->registerSettingsSection(AdminSection::class);
+		$context->registerSettings(Admin::class);
 	}
 
 	public function boot(IBootContext $context): void {
