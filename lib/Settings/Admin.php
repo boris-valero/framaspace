@@ -32,13 +32,9 @@ class Admin implements ISettings {
 			if ($this->appManager->isInstalled($appId)) {
 				$appInfo = $this->appManager->getAppInfo($appId);
 				$appsData[] = [
-					'id' => $appId,
-					'name' => (string)($entry['name'] ?? ($appInfo['name'] ?? $appId)),
-					'version' => (string)($appInfo['version'] ?? 'N/A'),
-					'enabled' => $this->appManager->isEnabledForUser($appId),
-					'href' => (string)($entry['href'] ?? ''),
-					'icon' => (string)($entry['icon'] ?? ''),
-					'order' => (int)($entry['order'] ?? 0),
+                	'name' => (string)($entry['name'] ?? ($this->appManager->getAppInfo($appId)['name'] ?? $appId)),
+                    'enabled' => $this->appManager->isEnabledForUser($appId),
+                    'order' => (int)($entry['order'] ?? 0),
 				];
 			}
 		}
