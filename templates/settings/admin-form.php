@@ -27,8 +27,10 @@ if (!empty($_['apps'])) {
 ?>
 
 <div id="framaspace-admin-settings">
-    <h1>Applications installées sur cette instance Nextcloud</h1>
-    <p>Liste des applications actuellement installées :</p>
+    <div class="feature-description">
+        <p><strong>Information :</strong> Vous pouvez personnaliser votre interface et celle des utilisateurs de votre espace en masquant certaines applications du menu. Les applications cochées comme "cachées" ne seront plus visibles dans le menu pour vous et pour tous les utilisateurs de ce Framaspace.</p>
+        <p><strong>ATTENTION :</strong> Les applications "Fichiers" et "Activité" ne peuvent pas être masquées car elles sont essentielles au fonctionnement de Framaspace.</p>
+    </div>
     
     <form id="hidden-apps-form">
         <table>
@@ -70,11 +72,4 @@ if (!empty($_['apps'])) {
             <span id="save-status" class="save-status"></span>
         </div>
     </form>
-    
-    <p><strong>Total :</strong> <?php p(count($_['apps'])); ?> applications installées</p>
-    
-    <div class="info-box">
-        <p><strong>Information :</strong> Les applications cochées comme "cachées" ne seront pas visibles dans le menu supérieur pour tous les utilisateurs de cette instance Nextcloud.</p>
-        <p><strong>Applications protégées :</strong> Les applications "Fichiers" et "Activité" ne peuvent pas être masquées car elles sont essentielles au fonctionnement.</p>
-    </div>
 </div>
