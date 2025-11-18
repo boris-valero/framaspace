@@ -2,6 +2,7 @@
 
 namespace OCA\FramaSpace\Settings;
 
+use OCA\FramaSpace\Service\ConfigProxy;
 use OCP\App\IAppManager;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\INavigationManager;
@@ -14,11 +15,13 @@ class Admin implements ISettings {
 	public function __construct(
 		private IAppManager $appManager,
 		private INavigationManager $navigationManager,
+		private ConfigProxy $config,
 	) {
 	}
 
 	public function getForm(): TemplateResponse {
 		$navigationEntries = $this->navigationManager->getAll();
+		$hiddenApps = $this->config->getAppValueArray('big-menu-hidden-apps', '[]');
 
 		$appsData = [];
 		foreach ($navigationEntries as $entry) {
@@ -32,8 +35,10 @@ class Admin implements ISettings {
 			if ($this->appManager->isInstalled($appId)) {
 				$appInfo = $this->appManager->getAppInfo($appId);
 				$appsData[] = [
+                	'id' => $appId,
                 	'name' => (string)($entry['name'] ?? ($this->appManager->getAppInfo($appId)['name'] ?? $appId)),
                     'enabled' => $this->appManager->isEnabledForUser($appId),
+                    'hidden' => in_array($appId, $hiddenApps),
                     'order' => (int)($entry['order'] ?? 0),
 				];
 			}

@@ -11,13 +11,16 @@
     "dev": "vite --mode development build",
     "watch": "vite --mode development build --watch",
     "lint": "eslint src",
-    "stylelint": "stylelint src/**/*.vue src/**/*.scss src/**/*.css"
+    "stylelint": "stylelint src/**/*.vue src/**/*.scss src/**/*.css",
+    "build:prod": "npm run build && npm run organize-files",
+    "organize-files": "mkdir -p js css && mv js/*.css css/ 2>/dev/null || true"
   },
   "type": "module",
   "browserslist": [
     "extends @nextcloud/browserslist-config"
   ],
   "dependencies": {
+    "@nextcloud/router": "^3.0.1",
     "@nextcloud/vue": "^8.29.2",
     "vue": "^2.7.16"
   },
