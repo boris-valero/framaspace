@@ -22,6 +22,7 @@ class Admin implements ISettings {
 	public function getForm(): TemplateResponse {
 		$navigationEntries = $this->navigationManager->getAll();
 		$hiddenApps = $this->config->getAppValueArray('big-menu-hidden-apps', '[]');
+		$protectedApps = ['files', 'activity']; // Applications protégées du masquage
 
 		$appsData = [];
 		foreach ($navigationEntries as $entry) {
@@ -39,6 +40,7 @@ class Admin implements ISettings {
                 	'name' => (string)($entry['name'] ?? ($this->appManager->getAppInfo($appId)['name'] ?? $appId)),
                     'enabled' => $this->appManager->isEnabledForUser($appId),
                     'hidden' => in_array($appId, $hiddenApps),
+                    'protected' => in_array($appId, $protectedApps),
                     'order' => (int)($entry['order'] ?? 0),
 				];
 			}

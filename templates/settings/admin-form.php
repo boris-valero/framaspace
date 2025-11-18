@@ -45,12 +45,20 @@ if (!empty($_['apps'])) {
                     <td><?php p($app['name']); ?></td>
                     <td><?php p($app['enabled'] ? 'Activée' : 'Désactivée'); ?></td>
                     <td>
-                        <input type="checkbox" 
-                               id="app-<?php p($app['id']); ?>" 
-                               name="hidden_apps[]" 
-                               value="<?php p($app['id']); ?>"
-                               <?php if ($app['hidden']): ?>checked<?php endif; ?>>
-                        <label for="app-<?php p($app['id']); ?>">Cacher</label>
+                        <?php if ($app['protected']): ?>
+                            <input type="checkbox" 
+                                   id="app-<?php p($app['id']); ?>" 
+                                   disabled
+                                   title="Cette application ne peut pas être masquée">
+                            <label for="app-<?php p($app['id']); ?>" style="color: #999;">Protégée</label>
+                        <?php else: ?>
+                            <input type="checkbox" 
+                                   id="app-<?php p($app['id']); ?>" 
+                                   name="hidden_apps[]" 
+                                   value="<?php p($app['id']); ?>"
+                                   <?php if ($app['hidden']): ?>checked<?php endif; ?>>
+                            <label for="app-<?php p($app['id']); ?>">Cacher</label>
+                        <?php endif; ?>
                     </td>
                 </tr>
                 <?php endforeach; ?>
@@ -67,5 +75,6 @@ if (!empty($_['apps'])) {
     
     <div class="info-box">
         <p><strong>Information :</strong> Les applications cochées comme "cachées" ne seront pas visibles dans le menu supérieur pour tous les utilisateurs de cette instance Nextcloud.</p>
+        <p><strong>Applications protégées :</strong> Les applications "Fichiers" et "Activité" ne peuvent pas être masquées car elles sont essentielles au fonctionnement.</p>
     </div>
 </div>
