@@ -8,6 +8,22 @@
 
 script('framaspace', 'admin-settings');
 style('framaspace', 'admin-settings');
+
+// CSS inline pour le masquage des apps
+if (!empty($_['apps'])) {
+    $hiddenApps = array_filter($_['apps'], fn($app) => $app['hidden']);
+    if (!empty($hiddenApps)) {
+        echo '<style>';
+        foreach ($hiddenApps as $app) {
+            echo "#appmenu li[data-id=\"{$app['id']}\"] { display: none !important; }\n";
+            echo "#app-navigation-vue li[data-id=\"{$app['id']}\"] { display: none !important; }\n";
+            echo "a[href*=\"/apps/{$app['id']}/\"] { display: none !important; }\n";
+        }
+        echo "#appmenu { display: flex !important; }\n";
+        echo "#appmenu li:not([style*=\"display: none\"]) { display: inline-block !important; }\n";
+        echo '</style>';
+    }
+}
 ?>
 
 <div id="framaspace-admin-settings">

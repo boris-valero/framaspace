@@ -26,22 +26,6 @@ class Application extends App implements IBootstrap {
 	}
 
 	public function boot(IBootContext $context): void {
-		$context->injectFn($this->injectCss(...));
-	}
-
-	/**
-	 * Injecte le CSS pour masquer les applications sélectionnées
-	 */
-	public function injectCss(): void {
-		$appManager = \OC::$server->getAppManager();
-		
-		// Vérifier si l'app est activée
-		if ($appManager->isEnabledForUser(self::APP_ID)) {
-			\OCP\Util::addHeader('link', [
-				'rel' => 'stylesheet',
-				'type' => 'text/css',
-				'href' => \OC::$server->getURLGenerator()->linkToRoute('framaspace.css.hiddenApps'),
-			]);
-		}
+		// CSS intégré directement dans les templates
 	}
 }
