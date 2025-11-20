@@ -8,6 +8,7 @@ use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
+use OCP\Util;
 
 /**
  * @psalm-suppress UnusedClass
@@ -26,6 +27,20 @@ class Application extends App implements IBootstrap {
 	}
 
 	public function boot(IBootContext $context): void {
-		// CSS intégré directement dans les templates
+		// Injection du CSS pour masquer les applications sur toutes les pages
+		$this->injectHiddenAppsCSS();
+	}
+
+	/**
+	 * Injection du CSS pour masquer les applications
+	 */
+	private function injectHiddenAppsCSS(): void {
+		// Ajouter le CSS dynamique pour masquer les applications
+		$url = \OC::$server->getURLGenerator()->linkToRoute('framaspace.css.hiddenApps');
+		Util::addHeader('link', [
+			'rel' => 'stylesheet',
+			'type' => 'text/css',
+			'href' => $url
+		]);
 	}
 }

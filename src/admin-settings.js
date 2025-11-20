@@ -12,6 +12,47 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
 
+    // Fonction pour appliquer immédiatement le masquage
+    function applyHiddenApps(hiddenApps) {
+        // Supprimer les anciens styles
+        const existingStyle = document.getElementById('framaspace-hidden-apps');
+        if (existingStyle) {
+            existingStyle.remove();
+        }
+
+        if (hiddenApps.length === 0) return;
+
+        // Créer une nouvelle feuille de style
+        const style = document.createElement('style');
+        style.id = 'framaspace-hidden-apps';
+        
+        let cssRules = '';
+        hiddenApps.forEach(appId => {
+            cssRules += `
+                /* Masquer ${appId} dans tous les menus */
+                #appmenu li[data-id="${appId}"],
+                .header-appsmenu li[data-id="${appId}"],
+                .apps-menu .app-entry[data-app="${appId}"],
+                .app-grid .app-entry[data-app="${appId}"],
+                .app-menu .app-entry[data-app="${appId}"],
+                [data-app-id="${appId}"],
+                [data-app="${appId}"],
+                a[href*="/apps/${appId}/"],
+                a[href*="index.php/apps/${appId}"],
+                a[href$="apps/${appId}"],
+                #header .menutoggle + .menu li[data-id="${appId}"],
+                .app-navigation li[data-id="${appId}"] {
+                    display: none !important;
+                }
+            `;
+        });
+        
+        style.textContent = cssRules;
+        document.head.appendChild(style);
+        
+        console.log('FramaSpace: Applications masquées appliquées:', hiddenApps);
+    }
+
     form.addEventListener('submit', async function(e) {
         e.preventDefault();
         
@@ -37,13 +78,23 @@ document.addEventListener('DOMContentLoaded', function() {
             const data = await response.json();
             
             if (data.success) {
-                saveStatus.textContent = 'Paramètres sauvegardés avec succès ! Rechargement...';
+                // Appliquer immédiatement le masquage
+                applyHiddenApps(hiddenApps);
+                
+                saveStatus.textContent = 'Paramètres sauvegardés avec succès ! Le masquage a été appliqué.';
                 saveStatus.className = 'save-status success';
                 
-                // Rafraîchissement automatique après 1 seconde pour laisser le temps de lire le message
+                // Forcer le rechargement de la feuille de style externe après 2 secondes
                 setTimeout(() => {
-                    window.location.reload();
-                }, 1000);
+                    const link = document.querySelector('link[href*="framaspace/css/hidden-apps"]');
+                    if (link) {
+                        const newLink = link.cloneNode();
+                        newLink.href = link.href + '?t=' + Date.now();
+                        link.parentNode.insertBefore(newLink, link.nextSibling);
+                        link.remove();
+                    }
+                    console.log('FramaSpace: CSS rechargé');
+                }, 2000);
             } else {
                 throw new Error(data.error || 'Erreur lors de la sauvegarde');
             }
@@ -53,4 +104,13 @@ document.addEventListener('DOMContentLoaded', function() {
             saveStatus.className = 'save-status error';
         }
     });
+
+    // Appliquer le masquage au chargement initial de la page
+    const initialHiddenApps = [];
+    form.querySelectorAll('input[name="hidden_apps[]"]:checked').forEach(cb => {
+        initialHiddenApps.push(cb.value);
+    });
+    if (initialHiddenApps.length > 0) {
+        applyHiddenApps(initialHiddenApps);
+    }
 });
