@@ -8,29 +8,28 @@ use OCP\IConfig;
 /**
  * Service de proxy pour la configuration de FramaSpace
  */
-class ConfigProxy
-{
-    public function __construct(protected IConfig $config)
-    {
-    }
+class ConfigProxy {
+	/** @psalm-suppress PossiblyUnusedMethod */
+	public function __construct(
+		protected IConfig $config,
+	) {
+	}
 
-    public function getAppValue(string $name, string $default, string $appId = null): string
-    {
-        return (string) $this->config->getAppValue($appId ?? Application::APP_ID, $name, $default);
-    }
+	public function getAppValue(string $name, string $default, ?string $appId = null): string {
+		/** @psalm-suppress DeprecatedMethod */
+		return $this->config->getAppValue($appId ?? Application::APP_ID, $name, $default);
+	}
 
-    public function setAppValue(string $name, string $value, string $appId = null): void
-    {
-        $this->config->setAppValue($appId ?? Application::APP_ID, $name, $value);
-    }
+	public function setAppValue(string $name, string $value, ?string $appId = null): void {
+		/** @psalm-suppress DeprecatedMethod */
+		$this->config->setAppValue($appId ?? Application::APP_ID, $name, $value);
+	}
 
-    public function getAppValueArray(string $name, string $default, string $appId = null): array
-    {
-        return (array) json_decode($this->getAppValue($name, $default, $appId), true);
-    }
+	public function getAppValueArray(string $name, string $default, ?string $appId = null): array {
+		return (array)json_decode($this->getAppValue($name, $default, $appId), true);
+	}
 
-    public function setAppValueArray(string $name, array $value, string $appId = null): void
-    {
-        $this->setAppValue($name, json_encode($value), $appId);
-    }
+	public function setAppValueArray(string $name, array $value, ?string $appId = null): void {
+		$this->setAppValue($name, json_encode($value), $appId);
+	}
 }

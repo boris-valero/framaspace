@@ -21,7 +21,7 @@ class Admin implements ISettings {
 
 	public function getForm(): TemplateResponse {
 		$navigationEntries = $this->navigationManager->getAll();
-		$hiddenApps = $this->config->getAppValueArray('big-menu-hidden-apps', '[]');
+		$hiddenApps = $this->config->getAppValueArray('hidden_apps', '[]');
 		$protectedApps = ['files', 'activity']; // Applications protégées du masquage
 
 		$appsData = [];
@@ -34,14 +34,13 @@ class Admin implements ISettings {
 			$appId = $entry['id'];
 
 			if ($this->appManager->isInstalled($appId)) {
-				$appInfo = $this->appManager->getAppInfo($appId);
 				$appsData[] = [
-                	'id' => $appId,
-                	'name' => (string)($entry['name'] ?? ($this->appManager->getAppInfo($appId)['name'] ?? $appId)),
-                    'enabled' => $this->appManager->isEnabledForUser($appId),
-                    'hidden' => in_array($appId, $hiddenApps),
-                    'protected' => in_array($appId, $protectedApps),
-                    'order' => (int)($entry['order'] ?? 0),
+					'id' => $appId,
+					'name' => (string)($entry['name'] ?? ($this->appManager->getAppInfo($appId)['name'] ?? $appId)),
+					'enabled' => $this->appManager->isEnabledForUser($appId),
+					'hidden' => in_array($appId, $hiddenApps),
+					'protected' => in_array($appId, $protectedApps),
+					'order' => (int)($entry['order'] ?? 0),
 				];
 			}
 		}

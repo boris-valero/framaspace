@@ -80,7 +80,7 @@ echo '
 #framaspace-admin-settings .info-box {
     background-color: #d4edda;
     border: 1px solid #c3e6cb;
-    color: #155724;
+    color: #FFFF00;
     padding: 15px;
     border-radius: 4px;
     margin-top: 20px;
@@ -97,32 +97,32 @@ echo '
 ';
 
 if (!empty($_['apps'])) {
-    $hiddenApps = array_filter($_['apps'], fn($app) => $app['hidden']);
-    if (!empty($hiddenApps)) {
-        foreach ($hiddenApps as $app) {
-            echo "#appmenu li[data-id=\"{$app['id']}\"] { display: none !important; }\n";
-            echo "#app-navigation-vue li[data-id=\"{$app['id']}\"] { display: none !important; }\n";
-            echo "a[href*=\"/apps/{$app['id']}/\"] { display: none !important; }\n";
-        }
-        echo "#appmenu { display: flex !important; }\n";
-        echo "#appmenu li:not([style*=\"display: none\"]) { display: inline-block !important; }\n";
-    }
+	$hiddenApps = array_filter($_['apps'], fn ($app) => $app['hidden']);
+	if (!empty($hiddenApps)) {
+		foreach ($hiddenApps as $app) {
+			echo "#appmenu li[data-id=\"{$app['id']}\"] { display: none !important; }\n";
+			echo "#app-navigation-vue li[data-id=\"{$app['id']}\"] { display: none !important; }\n";
+			echo "a[href*=\"/apps/{$app['id']}/\"] { display: none !important; }\n";
+		}
+		echo "#appmenu { display: flex !important; }\n";
+		echo "#appmenu li:not([style*=\"display: none\"]) { display: inline-block !important; }\n";
+	}
 }
 echo '</style>';
 ?>
 
 <div id="framaspace-admin-settings">
     <div class="feature-description">
-        <p><strong>Information :</strong> Vous pouvez personnaliser votre interface et celle des utilisateurs de votre espace en masquant certaines applications du menu. Les applications cochées comme "cachées" ne seront plus visibles dans le menu pour vous et pour tous les utilisateurs de ce Framaspace.</p>
-        <p><strong>ATTENTION :</strong> Les applications "Fichiers" et "Activité" ne peuvent pas être masquées car elles sont essentielles au fonctionnement de Framaspace.</p>
+        <p><strong>Information :</strong> Personnalisez l'interface en masquant certaines applications du menu (hors Fichiers et Activité) pour vous et pour tous les utilisateurs de ce Framaspace. </p> <br /> 
+        <p><strong>Mode d'emploi :</strong> Cochez la case de la colonne de droite pour masquer une application et décochez cette même case pour l'afficher de nouveau. N'oubliez pas de cliquer sur "Sauvegarder". Au prochain rechargement de la page, l'icône sera masquée. </p> <br />
     </div>
     
     <form id="hidden-apps-form">
         <table>
             <thead>
                 <tr>
-                    <th>Nom</th>
-                    <th>Cachée dans le menu</th>
+                    <th>Nom de l'application</th>
+                    <th>Souhaitez-vous cacher l'icône ?</th>
                 </tr>
             </thead>
             <tbody>
