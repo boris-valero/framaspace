@@ -4,7 +4,6 @@
  */
 declare(strict_types=1);
 
-// Validation des données
 if (!isset($_['hidden_apps']) || !is_array($_['hidden_apps'])) {
 	echo "/* FramaSpace: Aucune application à masquer */\n";
 	return;
@@ -12,7 +11,6 @@ if (!isset($_['hidden_apps']) || !is_array($_['hidden_apps'])) {
 
 $hiddenApps = $_['hidden_apps'];
 
-// Positions des applications dans le menu (basées sur votre inspection DOM)
 $appPositions = [
 	'dashboard' => 1,
 	'talk' => 2,
