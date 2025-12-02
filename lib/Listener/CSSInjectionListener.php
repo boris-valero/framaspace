@@ -29,30 +29,26 @@ class CSSInjectionListener implements IEventListener {
 			return;
 		}
 
-		// Récupérer les applications masquées depuis la BDD (avec cache)
 		/** @psalm-suppress DeprecatedMethod */
 		$hiddenAppsJson = $this->config->getAppValue('framaspace', 'hidden_apps', '[]');
 		$decoded = json_decode($hiddenAppsJson, true);
 
 		if ($decoded === null || !is_array($decoded)) {
 			return;
-		}        // Filtrer pour ne garder que les chaînes
+		}
 		$hiddenApps = array_filter($decoded, 'is_string');
 
 		if (empty($hiddenApps)) {
 			return;
 		}
 
-		// Générer et injecter le CSS de masquage
 		$this->injectHiddenAppsCSS($hiddenApps);
 	}	/**
 	 * Injection du CSS pour masquer les applications
 	 */
 	private function injectHiddenAppsCSS(array $hiddenApps): void {
-		// Générer le CSS inline pour un masquage immédiat et fiable
 		$css = $this->generateHiddenAppsCSS($hiddenApps);
 
-		// Injecter le CSS directement dans le head
 		Util::addHeader('style', [], $css);
 
 	}
@@ -61,15 +57,13 @@ class CSSInjectionListener implements IEventListener {
 	 * Génération du CSS pour masquer les applications
 	 */
 	private function generateHiddenAppsCSS(array $hiddenApps): string {
-		// Filtrer pour s'assurer que tous les éléments sont des chaînes pour implode
 		$stringApps = array_filter($hiddenApps, 'is_string');
 		$css = '/* FramaSpace - Applications masquées: ' . implode(', ', $stringApps) . " */\n";
 
-		// Positions des applications dans le menu (basées sur l'inspection DOM)
 		$appPositions = [
 			'dashboard' => 1,
 			'talk' => 2,
-			'spreed' => 2,    // Talk s'appelle aussi "spreed" en interne
+			'spreed' => 2,
 			'files' => 3,
 			'photos' => 4,
 			'activity' => 5,
