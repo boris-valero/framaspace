@@ -96,18 +96,6 @@ echo '
 }
 ';
 
-if (!empty($_['apps'])) {
-	$hiddenApps = array_filter($_['apps'], fn ($app) => $app['hidden']);
-	if (!empty($hiddenApps)) {
-		foreach ($hiddenApps as $app) {
-			echo "#appmenu li[data-id=\"{$app['id']}\"] { display: none !important; }\n";
-			echo "#app-navigation-vue li[data-id=\"{$app['id']}\"] { display: none !important; }\n";
-			echo "a[href*=\"/apps/{$app['id']}/\"] { display: none !important; }\n";
-		}
-		echo "#appmenu { display: flex !important; }\n";
-		echo "#appmenu li:not([style*=\"display: none\"]) { display: inline-block !important; }\n";
-	}
-}
 echo '</style>';
 ?>
 
