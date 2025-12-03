@@ -1,11 +1,10 @@
 # Application Frama Space
 
-## Problème résolu par l'application
 Nextcloud est une plateforme qui propose beaucoup d'applications par défaut. Pour des utilisateurs débutants ou des structures qui ont des besoins simples, cette richesse peut devenir un handicap et occasionner de la confusion, voire un abandon de la plateforme de collaboration Nextcloud par les utilisateurs les plus éloignés du numérique.
 
 Nous avons donc développé une application Nextcloud permettant aux administrateurs de Nextcloud de masquer les icônes des applications dont ils ne se servent pas ou dont leur organisation ne se sert pas et ainsi de personnaliser l'interface selon leurs besoins spécifiques ou ceux de leur organisation.
 
-## Architecture technique de l'application
+## Architecture technique
 
 Notre application utilise l'architecture MVC (Modèle-Vue-Contrôleur) :
 
@@ -20,7 +19,7 @@ Elle gère l'affichage de l'interface d'administration avec le tableau et les ca
 
 Le masquage effectif des applications est géré par un système séparé via un Event Listener qui s'active sur BeforeTemplateRenderedEvent : Il lit la configuration, génère du CSS dynamique, et l'injecte automatiquement sur toutes les pages pour masquer les applications sélectionnées.
 
-## Prérequis pour exécuter l'application
+## Prérequis
 
 - Nextcloud version 31 minimum — https://download.nextcloud.com/server/releases/
 - Node.js version 20 minimum — https://nodejs.org/download/release/latest-v20.x/
@@ -28,7 +27,36 @@ Le masquage effectif des applications est géré par un système séparé via un
 - Serveur web : Apache ou Nginx
 - Base de données : MySQL, PostgreSQL ou SQLite
 
-## Installation et déploiement de l'application
+## Installation manuelle
+
+1. Récupération du code
+```bash
+cd /tmp
+git clone https://framagit.org/framasoft/framaspace/custom-apps/framaspace.git
+```
+
+1. Installation des dépendances
+```bash
+cd framaspace
+npm install
+composer install
+```
+
+1. Construction de l’interface
+```bash
+npm run build
+```
+
+1. Copie de l’application dans Nextcloud et activation
+```bash
+sudo rsync -a /tmp/framaspace/ /var/www/nextcloud/apps/framaspace/ &&
+sudo chown www-data: -R /var/www/nextcloud/apps/framaspace/ &&
+sudo -u www-data php /var/www/nextcloud/occ maintenance:mode --on &&
+sudo -u www-data php /var/www/nextcloud/occ app:enable framaspace &&
+sudo -u www-data php /var/www/nextcloud/occ maintenance:mode --off
+```
+
+## Installation pour développer
 
 1. Ajuster les permissions grâce aux listes de contrôle d'accès (ACL)
 ```bash
@@ -44,21 +72,24 @@ git clone https://framagit.org/framasoft/framaspace/custom-apps/framaspace.git
 
 3. Installer les dépendances
 ```bash
+cd framaspace
 npm install && composer install
 ```
-4. Construire le Front-End
+4. Construire le Front-End en mode développement
 ```bash
 npm run dev
 ```
 
 5. Activer l'application
 ```bash
-sudo -u www-data php /var/www/nextcloud/occ maintenance:mode --on && sudo -u www-data php /var/www/nextcloud/occ app:enable framaspace && sudo -u www-data php /var/www/nextcloud/occ maintenance:mode --off
+sudo -u www-data php /var/www/nextcloud/occ maintenance:mode --on
+sudo -u www-data php /var/www/nextcloud/occ app:enable framaspace
+sudo -u www-data php /var/www/nextcloud/occ maintenance:mode --off
 ```
 
-## Utilisation de l'application
+## Utilisation
 
 1. Aller dans le menu Paramètres d'Administration → Administration → FramaSpace
 2. Cocher les applications à masquer
 3. Cliquer sur "Sauvegarder"
-4. Rechargez la page
+4. Recharger la page
