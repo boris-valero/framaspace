@@ -19,7 +19,7 @@ Par exemple, votre association utilise uniquement les applications Fichiers et A
 
 Elle sera bientôt installable depuis l'App Store de Nextcloud et instalée et activée par défaut dans tous les espaces Framaspace, le cloud convivial pour collectifs solidaires proposé par Framasoft.
 
-### Pour les développeurs et administrateurs système
+### Pour les utilisateurs avancés
 
 Si vous souhaitez tester ou installer manuellement cette application :
 
