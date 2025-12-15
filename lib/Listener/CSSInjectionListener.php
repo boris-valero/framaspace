@@ -43,13 +43,16 @@ class CSSInjectionListener implements IEventListener {
 		}
 
 		$this->injectHiddenAppsCSS($hiddenApps);
-	}	/**
+	}
+
+	/**
 	 * Injection du CSS pour masquer les applications
 	 */
 	private function injectHiddenAppsCSS(array $hiddenApps): void {
 		$css = $this->generateHiddenAppsCSS($hiddenApps);
 
-		Util::addHeader('style', [], $css);
+		// Inject inline CSS with a stable id to avoid malformed headers and duplicates
+		Util::addHeader('style', ['id' => 'framaspace-hidden-apps'], $css);
 
 	}
 
