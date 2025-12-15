@@ -7,7 +7,6 @@ namespace OCA\FramaSpace\Controller;
 use OCA\FramaSpace\Service\ConfigProxy;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\Attribute\FrontpageRoute;
-use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 
@@ -25,7 +24,6 @@ class AdminController extends Controller {
 		parent::__construct($appName, $request);
 	}
 
-	#[NoCSRFRequired]
 	#[FrontpageRoute(verb: 'POST', url: '/admin/hidden-apps')]
 	public function setHiddenApps(): JSONResponse {
 		$hiddenAppsParam = $this->request->getParam('hidden_apps', '[]');
