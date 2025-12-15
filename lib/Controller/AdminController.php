@@ -27,6 +27,7 @@ class AdminController extends Controller {
 	#[FrontpageRoute(verb: 'POST', url: '/admin/hidden-apps')]
 	public function setHiddenApps(): JSONResponse {
 		$hiddenAppsParam = $this->request->getParam('hidden_apps', '[]');
+		$protectedApps = ['files', 'activity'];
 
 		// Si c'est déjà un tableau, on le garde tel quel
 		if (is_array($hiddenAppsParam)) {
@@ -54,9 +55,27 @@ class AdminController extends Controller {
 			$validatedApps[] = $appId;
 		}
 
-		// Sauvegarde dans la configuration
-		$this->config->setAppValueArray('hidden_apps', $validatedApps);
+		// Filtrer les applications protégées et supprimer les doublons
+		$filteredApps = [];
+		$ignoredProtected = [];
+		foreach ($validatedApps as $appId) {
+			if (in_array($appId, $protectedApps, true)) {
+				$ignoredProtected[$appId] = true;
+				continue;
+			}
+			$filteredApps[$appId] = true; // use keys to dedupe
+		}
 
-		return new JSONResponse(['success' => true, 'hidden_apps' => $validatedApps]);
+		$filteredApps = array_keys($filteredApps);
+		$ignoredProtected = array_keys($ignoredProtected);
+
+		// Sauvegarde dans la configuration avec la liste nettoyée
+		$this->config->setAppValueArray('hidden_apps', $filteredApps);
+
+		return new JSONResponse([
+			'success' => true,
+			'hidden_apps' => $filteredApps,
+			'ignored_protected_apps' => $ignoredProtected,
+		]);
 	}
 }
