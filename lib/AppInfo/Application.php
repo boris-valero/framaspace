@@ -23,12 +23,9 @@ class Application extends App implements IBootstrap {
 	}
 
 	public function register(IRegistrationContext $context): void {
-		// Enregistrer le listener pour injecter le CSS sur toutes les pages
 		$context->registerEventListener(BeforeTemplateRenderedEvent::class, CSSInjectionListener::class);
 	}
 
 	public function boot(IBootContext $context): void {
-		// Le CSS sera injecté via l'event listener sur chaque page
-		// Pas besoin de logique supplémentaire ici
 	}
 }

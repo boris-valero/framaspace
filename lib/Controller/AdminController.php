@@ -29,7 +29,6 @@ class AdminController extends Controller {
 		$hiddenAppsParam = $this->request->getParam('hidden_apps', '[]');
 		$protectedApps = ['files', 'activity'];
 
-		// Si c'est déjà un tableau, on le garde tel quel
 		if (is_array($hiddenAppsParam)) {
 			/** @var array<int, mixed> $hiddenApps */
 			$hiddenApps = $hiddenAppsParam;
@@ -45,7 +44,6 @@ class AdminController extends Controller {
 			$hiddenApps = $decoded;
 		}
 
-		// Validation : s'assurer que tous les éléments sont des chaînes
 		/** @var array<string> $validatedApps */
 		$validatedApps = [];
 		foreach ($hiddenApps as $appId) {
@@ -55,7 +53,6 @@ class AdminController extends Controller {
 			$validatedApps[] = $appId;
 		}
 
-		// Filtrer les applications protégées et supprimer les doublons
 		$filteredApps = [];
 		$ignoredProtected = [];
 		foreach ($validatedApps as $appId) {
@@ -69,7 +66,6 @@ class AdminController extends Controller {
 		$filteredApps = array_keys($filteredApps);
 		$ignoredProtected = array_keys($ignoredProtected);
 
-		// Sauvegarde dans la configuration avec la liste nettoyée
 		$this->config->setAppValueArray('hidden_apps', $filteredApps);
 
 		return new JSONResponse([

@@ -12,9 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		return
 	}
 
-	// Fonction pour appliquer immédiatement le masquage
 	function applyHiddenApps(hiddenApps) {
-		// Supprimer les anciens styles
 		const existingStyle = document.getElementById('framaspace-hidden-apps')
 		if (existingStyle) {
 			existingStyle.remove()
@@ -22,7 +20,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		if (hiddenApps.length === 0) return
 
-		// Créer une nouvelle feuille de style
 		const style = document.createElement('style')
 		style.id = 'framaspace-hidden-apps'
 
@@ -54,16 +51,13 @@ document.addEventListener('DOMContentLoaded', function() {
 	form.addEventListener('submit', async function(e) {
 		e.preventDefault()
 
-		// Récupération des applications cochées
 		const checkboxes = form.querySelectorAll('input[name="hidden_apps[]"]:checked')
 		const hiddenApps = Array.from(checkboxes).map(cb => cb.value)
 
-		// Affichage du statut de sauvegarde
 		saveStatus.textContent = 'Sauvegarde en cours...'
 		saveStatus.className = 'save-status'
 
 		try {
-			// Envoi de la requête
 			const response = await fetch(generateUrl('/apps/framaspace/admin/hidden-apps'), {
 				method: 'POST',
 				headers: {
@@ -76,13 +70,11 @@ document.addEventListener('DOMContentLoaded', function() {
 			const data = await response.json()
 
 			if (data.success) {
-				// Appliquer immédiatement le masquage
 				applyHiddenApps(hiddenApps)
 
 				saveStatus.textContent = 'Paramètres sauvegardés avec succès ! Veuillez recharger la page pour que les modifications prennent effet.'
 				saveStatus.className = 'save-status success'
 
-				// Forcer le rechargement de la feuille de style externe après 2 secondes
 				setTimeout(() => {
 					const link = document.querySelector('link[href*="framaspace/css/hidden-apps"]')
 					if (link) {
@@ -101,7 +93,6 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	})
 
-	// Appliquer le masquage au chargement initial de la page
 	const initialHiddenApps = []
 	form.querySelectorAll('input[name="hidden_apps[]"]:checked').forEach(cb => {
 		initialHiddenApps.push(cb.value)
