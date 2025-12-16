@@ -6,72 +6,72 @@ use PHPUnit\Framework\TestCase;
 
 class SimpleAdminControllerTest extends TestCase {
 
-    public function testFilterProtectedApps(): void {
-        $hiddenApps = ['files', 'deck', 'activity', 'photos', 'mail'];
-        $protectedApps = ['files', 'activity'];
+	public function testFilterProtectedApps(): void {
+		$hiddenApps = ['files', 'deck', 'activity', 'photos', 'mail'];
+		$protectedApps = ['files', 'activity'];
 
-        $filteredApps = [];
-        $ignoredProtected = [];
-        
-        foreach ($hiddenApps as $appId) {
-            if (in_array($appId, $protectedApps, true)) {
-                $ignoredProtected[] = $appId;
-                continue;
-            }
-            $filteredApps[] = $appId;
-        }
+		$filteredApps = [];
+		$ignoredProtected = [];
 
-        $this->assertEquals(['deck', 'photos', 'mail'], $filteredApps);
-        $this->assertEquals(['files', 'activity'], $ignoredProtected);
-        $this->assertCount(3, $filteredApps);
-        $this->assertCount(2, $ignoredProtected);
-    }
+		foreach ($hiddenApps as $appId) {
+			if (in_array($appId, $protectedApps, true)) {
+				$ignoredProtected[] = $appId;
+				continue;
+			}
+			$filteredApps[] = $appId;
+		}
 
-    public function testJsonValidation(): void {
-        $validJson = '["deck", "photos", "mail"]';
-        $invalidJson = 'invalid-json';
-        $emptyJson = '[]';
+		$this->assertEquals(['deck', 'photos', 'mail'], $filteredApps);
+		$this->assertEquals(['files', 'activity'], $ignoredProtected);
+		$this->assertCount(3, $filteredApps);
+		$this->assertCount(2, $ignoredProtected);
+	}
 
-        $decoded = json_decode($validJson, true);
-        $this->assertIsArray($decoded);
-        $this->assertEquals(['deck', 'photos', 'mail'], $decoded);
+	public function testJsonValidation(): void {
+		$validJson = '["deck", "photos", "mail"]';
+		$invalidJson = 'invalid-json';
+		$emptyJson = '[]';
 
-        $decodedInvalid = json_decode($invalidJson, true);
-        $this->assertNull($decodedInvalid);
+		$decoded = json_decode($validJson, true);
+		$this->assertIsArray($decoded);
+		$this->assertEquals(['deck', 'photos', 'mail'], $decoded);
 
-        $decodedEmpty = json_decode($emptyJson, true);
-        $this->assertIsArray($decodedEmpty);
-        $this->assertEmpty($decodedEmpty);
-    }
+		$decodedInvalid = json_decode($invalidJson, true);
+		$this->assertNull($decodedInvalid);
 
-    public function testStringValidation(): void {
-        $mixedArray = ['deck', 123, 'photos', null, 'mail', false];
-        $validApps = [];
+		$decodedEmpty = json_decode($emptyJson, true);
+		$this->assertIsArray($decodedEmpty);
+		$this->assertEmpty($decodedEmpty);
+	}
 
-        foreach ($mixedArray as $appId) {
-            if (is_string($appId)) {
-                $validApps[] = $appId;
-            }
-        }
+	public function testStringValidation(): void {
+		$mixedArray = ['deck', 123, 'photos', null, 'mail', false];
+		$validApps = [];
 
-        $this->assertEquals(['deck', 'photos', 'mail'], $validApps);
-        $this->assertCount(3, $validApps);
-        
-        foreach ($validApps as $app) {
-            $this->assertIsString($app);
-        }
-    }
+		foreach ($mixedArray as $appId) {
+			if (is_string($appId)) {
+				$validApps[] = $appId;
+			}
+		}
 
-    public function testDuplicateRemoval(): void {
-        $appsWithDuplicates = ['deck', 'photos', 'deck', 'mail', 'photos'];
-        
-        $filteredApps = [];
-        foreach ($appsWithDuplicates as $appId) {
-            $filteredApps[$appId] = true;
-        }
-        $uniqueApps = array_keys($filteredApps);
+		$this->assertEquals(['deck', 'photos', 'mail'], $validApps);
+		$this->assertCount(3, $validApps);
 
-        $this->assertEquals(['deck', 'photos', 'mail'], $uniqueApps);
-        $this->assertCount(3, $uniqueApps);
-    }
+		foreach ($validApps as $app) {
+			$this->assertIsString($app);
+		}
+	}
+
+	public function testDuplicateRemoval(): void {
+		$appsWithDuplicates = ['deck', 'photos', 'deck', 'mail', 'photos'];
+
+		$filteredApps = [];
+		foreach ($appsWithDuplicates as $appId) {
+			$filteredApps[$appId] = true;
+		}
+		$uniqueApps = array_keys($filteredApps);
+
+		$this->assertEquals(['deck', 'photos', 'mail'], $uniqueApps);
+		$this->assertCount(3, $uniqueApps);
+	}
 }
