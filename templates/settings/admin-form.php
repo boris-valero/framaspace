@@ -12,16 +12,16 @@ style('framaspace', 'admin-form');
 
 <div id="framaspace-admin-settings">
     <div class="feature-description">
-        <p><strong>Information :</strong> Personnalisez l'interface en masquant certaines applications du menu (hors Fichiers et Activité) pour vous et pour tous les utilisateurs de ce Framaspace. </p> <br /> 
-        <p><strong>Mode d'emploi :</strong> Cochez la case de la colonne de droite pour masquer une application et décochez cette même case pour l'afficher de nouveau. N'oubliez pas de cliquer sur "Sauvegarder". Au prochain rechargement de la page, l'icône sera masquée. </p> <br />
+        <p><strong><?php p($l->t('Information:')); ?></strong> <?php p($l->t('Customize the interface by hiding certain applications from the menu (except Files and Activity) for you and for all users of this Framaspace.')); ?> </p> <br /> 
+        <p><strong><?php p($l->t('Instructions:')); ?></strong> <?php p($l->t('Check the box in the right column to hide an application and uncheck this same box to display it again. Don\'t forget to click "Save". On the next page reload, the icon will be hidden.')); ?> </p> <br />
     </div>
     
     <form id="hidden-apps-form">
         <table>
             <thead>
                 <tr>
-                    <th>Nom de l'application</th>
-                    <th>Souhaitez-vous cacher l'icône ?</th>
+                    <th><?php p($l->t('Application name')); ?></th>
+                    <th><?php p($l->t('Do you want to hide the icon?')); ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -33,15 +33,15 @@ style('framaspace', 'admin-form');
                             <input type="checkbox" 
                                    id="app-<?php p($app['id']); ?>" 
                                    disabled
-                                   title="Cette application ne peut pas être masquée">
-                            <label for="app-<?php p($app['id']); ?>" style="color: #999;">Protégée</label>
+                                   title="<?php p($l->t('This application cannot be hidden')); ?>">
+                            <label for="app-<?php p($app['id']); ?>" style="color: #999;"><?php p($l->t('Protected')); ?></label>
                         <?php else: ?>
                             <input type="checkbox" 
                                    id="app-<?php p($app['id']); ?>" 
                                    name="hidden_apps[]" 
                                    value="<?php p($app['id']); ?>"
                                    <?php if ($app['hidden']): ?>checked<?php endif; ?>>
-                            <label for="app-<?php p($app['id']); ?>">Cacher</label>
+                            <label for="app-<?php p($app['id']); ?>"><?php p($l->t('Hide')); ?></label>
                         <?php endif; ?>
                     </td>
                 </tr>
@@ -50,7 +50,7 @@ style('framaspace', 'admin-form');
         </table>
         
         <div class="form-actions">
-            <button type="submit" class="button primary">Sauvegarder</button>
+            <button type="submit" class="button primary"><?php p($l->t('Save')); ?></button>
             <span id="save-status" class="save-status"></span>
         </div>
     </form>
