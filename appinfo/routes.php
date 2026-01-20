@@ -8,4 +8,17 @@ return [
 			'verb' => 'GET',
 		],
 	],
+	'resources' => [],
+	'routes' => [
+		[
+			'name' => 'adminapi#getApps',
+			'url' => '/api/admin/apps',
+			'verb' => 'GET'
+		],
+		[
+			'name' => 'adminapi#setHidden',
+			'url' => '/api/admin/hidden',
+			'verb' => 'POST'
+		],
+	]
 ];
