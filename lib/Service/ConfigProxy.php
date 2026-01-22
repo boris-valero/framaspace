@@ -3,7 +3,7 @@
 namespace OCA\FramaSpace\Service;
 
 use OCA\FramaSpace\AppInfo\Application;
-use OCP\IConfig;
+use OCP\IAppConfig;
 
 /**
  * Service de proxy pour la configuration de FramaSpace
@@ -11,18 +11,16 @@ use OCP\IConfig;
 class ConfigProxy {
 	/** @psalm-suppress PossiblyUnusedMethod */
 	public function __construct(
-		protected IConfig $config,
+		protected IAppConfig $config,
 	) {
 	}
 
 	public function getAppValue(string $name, string $default, ?string $appId = null): string {
-		/** @psalm-suppress DeprecatedMethod */
-		return $this->config->getAppValue($appId ?? Application::APP_ID, $name, $default);
+		return $this->config->getValueString($appId ?? Application::APP_ID, $name, $default);
 	}
 
 	public function setAppValue(string $name, string $value, ?string $appId = null): void {
-		/** @psalm-suppress DeprecatedMethod */
-		$this->config->setAppValue($appId ?? Application::APP_ID, $name, $value);
+		$this->config->setValueString($appId ?? Application::APP_ID, $name, $value);
 	}
 
 	public function getAppValueArray(string $name, string $default, ?string $appId = null): array {

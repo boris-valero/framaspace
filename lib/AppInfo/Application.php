@@ -26,7 +26,7 @@ class Application extends App implements IBootstrap {
 		$context->registerService(ConfigProxy::class, function($c) {
 			// Injection du service de config natif de Nextcloud si besoin
 			return new ConfigProxy(
-				$c->query(\OCP\IConfig::class)
+				$c->query(\OCP\IAppConfig::class)
 			);
 		});
 	}
