@@ -92,15 +92,9 @@ li.app-menu-entry:nth-child({$position}) {
 			}
 
 			$css .= "
-/* Masquer {$appId} par sélecteurs génériques */
+/* Masquer {$appId} dans le menu */
 #appmenu li[data-id=\"{$appId}\"],
-.header-appsmenu li[data-id=\"{$appId}\"],
-.apps-menu .app-entry[data-app=\"{$appId}\"],
-.app-grid .app-entry[data-app=\"{$appId}\"],
-[data-app-id=\"{$appId}\"],
-[data-app=\"{$appId}\"],
-a[href*=\"/apps/{$appId}/\"],
-a[href*=\"index.php/apps/{$appId}\"] {
+.header-appsmenu li[data-id=\"{$appId}\"] {
     display: none;
 }";
 		}
