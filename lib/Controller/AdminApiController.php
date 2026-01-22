@@ -31,7 +31,7 @@ class AdminApiController extends Controller {
             if ($this->appManager->isInstalled($appId)) {
                 $appsData[] = [
                     'id' => $appId,
-                    'name' => (string)($entry['name'] ?? ($this->appManager->getAppInfo($appId)['name'] ?? $appId)),
+                    'name' => (string)($entry['name'] ?? $appId),
                     'hidden' => in_array($appId, $hiddenApps),
                     'protected' => in_array($appId, $protectedApps)
                 ];
