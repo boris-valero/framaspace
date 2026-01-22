@@ -23,7 +23,7 @@ class ConfigProxy {
 		$this->config->setValueString($appId ?? Application::APP_ID, $name, $value);
 	}
 
-	public function getAppValueArray(string $name, string $default, ?string $appId = null): array {
+	public function getAppValueArray(string $name, string $default = '[]', ?string $appId = null): array {
 		return (array)json_decode($this->getAppValue($name, $default, $appId), true);
 	}
 

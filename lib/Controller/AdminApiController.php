@@ -22,7 +22,7 @@ class AdminApiController extends Controller {
     #[NoCSRFRequired]
     public function getApps() {
         $navigationEntries = \OC::$server->getNavigationManager()->getAll();
-        $hiddenApps = $this->config->getAppValueArray('hidden_apps', '[]');
+        $hiddenApps = $this->config->getAppValueArray('hidden_apps');
         $protectedApps = ['files', 'activity'];
         $appsData = [];
         foreach ($navigationEntries as $entry) {
