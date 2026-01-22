@@ -2,6 +2,7 @@
 
 namespace OCA\FramaSpace\Settings;
 
+use OCA\FramaSpace\AppInfo\Application;
 use OCP\IL10N;
 use OCP\IURLGenerator;
 use OCP\Settings\IIconSection;
@@ -18,7 +19,7 @@ class AdminSection implements IIconSection {
 	}
 
 	public function getID(): string {
-		return 'framaspace';
+		return Application::APP_ID;
 	}
 
 	public function getName(): string {
@@ -30,6 +31,6 @@ class AdminSection implements IIconSection {
 	}
 
 	public function getIcon(): string {
-		return $this->url->imagePath('framaspace', 'app.svg');
+		return $this->url->imagePath(Application::APP_ID, 'app.svg');
 	}
 }

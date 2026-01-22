@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace OCA\FramaSpace\Listener;
 
+use OCA\FramaSpace\AppInfo\Application;
 use OCP\AppFramework\Http\Events\BeforeTemplateRenderedEvent;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
@@ -30,7 +31,7 @@ class CSSInjectionListener implements IEventListener {
 		}
 
 		/** @psalm-suppress DeprecatedMethod */
-		$hiddenAppsJson = $this->config->getAppValue('framaspace', 'hidden_apps', '[]');
+		$hiddenAppsJson = $this->config->getAppValue(Application::APP_ID, 'hidden_apps', '[]');
 		$decoded = json_decode($hiddenAppsJson, true);
 
 		if ($decoded === null || !is_array($decoded)) {

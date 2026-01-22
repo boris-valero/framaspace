@@ -2,6 +2,7 @@
 
 namespace OCA\FramaSpace\Settings;
 
+use OCA\FramaSpace\AppInfo\Application;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\Settings\ISettings;
 
@@ -11,11 +12,11 @@ use OCP\Settings\ISettings;
 class Admin implements ISettings {
 
     public function getForm(): TemplateResponse {
-        return new TemplateResponse('framaspace', 'settings/admin-form', []);
+        return new TemplateResponse(Application::APP_ID, 'settings/admin-form', []);
     }
 
     public function getSection(): string {
-        return 'framaspace';
+        return Application::APP_ID;
     }
 
     public function getPriority(): int {
