@@ -9,7 +9,11 @@
         "Protected": "Protégée",
         "This application cannot be hidden": "Cette application ne peut pas être masquée",
         "Hide": "Cacher",
-        "Save": "Sauvegarder"
+        "Save": "Sauvegarder",
+        "Loading error": "Erreur de chargement",
+        "Saving…": "Enregistrement…",
+        "Saved!": "Sauvegardé !",
+        "Save error": "Erreur de sauvegarde"
     },
     "pluralForm": "nplurals=2; plural=(n > 1);"
 }

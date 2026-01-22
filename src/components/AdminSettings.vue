@@ -3,26 +3,27 @@
     <table>
       <thead>
         <tr>
-          <th>Nom de l'application</th>
-          <th>Masquer ?</th>
+          <th>{{ t('framaspace', 'Application name') }}</th>
+          <th>{{ t('framaspace', 'Do you want to hide the icon?') }}</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="app in apps" :key="app.id">
           <td>{{ app.name }}</td>
           <td>
-            <input type="checkbox" v-model="app.hidden" :disabled="app.protected">
+            <input type="checkbox" v-model="app.hidden" :disabled="app.protected" :title="app.protected ? t('framaspace', 'This application cannot be hidden') : ''">
           </td>
         </tr>
       </tbody>
     </table>
-    <button type="submit">Sauvegarder</button>
+    <button type="submit">{{ t('framaspace', 'Save') }}</button>
     <span class="save-status" :class="statusClass">{{ status }}</span>
   </form>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { translate as t } from '@nextcloud/l10n'
 
 const apps = ref([])
 const status = ref('')
@@ -34,13 +35,13 @@ onMounted(async () => {
     if (!response.ok) throw new Error('Erreur serveur')
     apps.value = await response.json()
   } catch (e) {
-    status.value = "Erreur chargement"
+    status.value = t('framaspace', 'Loading error')
     statusClass.value = "error"
   }
 })
 
 const save = async () => {
-  status.value = "Enregistrement…"
+  status.value = t('framaspace', 'Saving…')
   statusClass.value = ""
   try {
     const response = await fetch('/apps/framaspace/api/admin/hidden', {
@@ -54,10 +55,10 @@ const save = async () => {
       })
     })
     if (!response.ok) throw new Error('Erreur serveur')
-    status.value = "Sauvegardé !"
+    status.value = t('framaspace', 'Saved!')
     statusClass.value = "success"
   } catch (e) {
-    status.value = "Erreur sauvegarde"
+    status.value = t('framaspace', 'Save error')
     statusClass.value = "error"
   }
 }

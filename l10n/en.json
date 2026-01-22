@@ -9,7 +9,11 @@
         "Protected": "Protected",
         "This application cannot be hidden": "This application cannot be hidden",
         "Hide": "Hide",
-        "Save": "Save"
+        "Save": "Save",
+        "Loading error": "Loading error",
+        "Saving…": "Saving…",
+        "Saved!": "Saved!",
+        "Save error": "Save error"
     },
     "pluralForm": "nplurals=2; plural=(n != 1);"
 }
