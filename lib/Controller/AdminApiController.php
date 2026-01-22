@@ -7,16 +7,19 @@ use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 use OCP\IRequest;
 use OCP\App\IAppManager;
+use OCP\IUserSession;
 use OCA\FramaSpace\Service\ConfigProxy;
 
 class AdminApiController extends Controller {
     private IAppManager $appManager;
     private ConfigProxy $config;
+    private IUserSession $userSession;
 
-    public function __construct($AppName, IRequest $request, IAppManager $appManager, ConfigProxy $config) {
+    public function __construct($AppName, IRequest $request, IAppManager $appManager, ConfigProxy $config, IUserSession $userSession) {
         parent::__construct($AppName, $request);
         $this->appManager = $appManager;
         $this->config = $config;
+        $this->userSession = $userSession;
     }
 
     #[NoCSRFRequired]
@@ -25,10 +28,11 @@ class AdminApiController extends Controller {
         $hiddenApps = $this->config->getAppValueArray('hidden_apps');
         $protectedApps = ['files', 'activity'];
         $appsData = [];
+        $user = $this->userSession->getUser();
         foreach ($navigationEntries as $entry) {
             if (!is_array($entry) || !isset($entry['id']) || !is_string($entry['id'])) continue;
             $appId = $entry['id'];
-            if ($this->appManager->isInstalled($appId)) {
+            if ($user && $this->appManager->isEnabledForUser($appId, $user)) {
                 $appsData[] = [
                     'id' => $appId,
                     'name' => (string)($entry['name'] ?? $appId),
