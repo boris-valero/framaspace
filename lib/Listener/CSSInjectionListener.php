@@ -87,17 +87,7 @@ class CSSInjectionListener implements IEventListener {
 				$css .= "
 /* Masquer {$appId} à la position {$position} */
 li.app-menu-entry:nth-child({$position}) {
-    display: none !important;
-    visibility: hidden !important;
-    opacity: 0 !important;
-    position: absolute !important;
-    left: -9999px !important;
-    top: -9999px !important;
-    width: 0 !important;
-    height: 0 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    overflow: hidden !important;
+    display: none;
 }";
 			}
 
@@ -111,35 +101,24 @@ li.app-menu-entry:nth-child({$position}) {
 [data-app=\"{$appId}\"],
 a[href*=\"/apps/{$appId}/\"],
 a[href*=\"index.php/apps/{$appId}\"] {
-    display: none !important;
-    visibility: hidden !important;
+    display: none;
 }";
 		}
 
 		$css .= '
 /* Réorganiser le menu pour éliminer les trous */
 .app-menu {
-    display: flex !important;
-    flex-direction: row !important;
-    flex-wrap: nowrap !important;
-    align-items: center !important;
-    justify-content: flex-start !important;
-    gap: 0 !important;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0;
 }
 
 .app-menu li.app-menu-entry {
-    flex: 0 0 auto !important;
-    position: relative !important;
-}
-
-/* Assurer que les éléments visibles restent bien visibles */
-li.app-menu-entry:not([style*="display: none"]):not([style*="position: absolute"]) {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    position: relative !important;
-    width: auto !important;
-    height: auto !important;
+    flex: 0 0 auto;
+    position: relative;
 }';
 
 		return $css;
