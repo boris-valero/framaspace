@@ -6,8 +6,8 @@
  * @var array $apps Liste des applications installées
  */
 
-script('framaspace', 'admin-settings');
-style('framaspace', 'admin-form');
+script('framaspace', 'framaspace-admin-settings');
+style('framaspace', 'framaspace-admin-form');
 ?>
 
 <div id="framaspace-admin-settings"></div>
