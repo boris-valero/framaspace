@@ -11,16 +11,10 @@ use OCP\EventDispatcher\IEventListener;
 use OCP\IConfig;
 use OCP\Util;
 
-/**
- * Listener pour injecter le CSS de masquage sur toutes les pages
- *
- * @implements IEventListener<BeforeTemplateRenderedEvent>
- */
 class CSSInjectionListener implements IEventListener {
 
 	private IConfig $config;
 
-	/** @psalm-suppress PossiblyUnusedMethod */
 	public function __construct(IConfig $config) {
 		$this->config = $config;
 	}
@@ -30,7 +24,6 @@ class CSSInjectionListener implements IEventListener {
 			return;
 		}
 
-		/** @psalm-suppress DeprecatedMethod */
 		$hiddenAppsJson = $this->config->getAppValue(Application::APP_ID, 'hidden_apps', '[]');
 		$decoded = json_decode($hiddenAppsJson, true);
 
@@ -46,75 +39,21 @@ class CSSInjectionListener implements IEventListener {
 		$this->injectHiddenAppsCSS($hiddenApps);
 	}
 
-	/**
-	 * Injection du CSS pour masquer les applications
-	 */
 	private function injectHiddenAppsCSS(array $hiddenApps): void {
 		$css = $this->generateHiddenAppsCSS($hiddenApps);
-
-		// Inject inline CSS with a stable id to avoid malformed headers and duplicates
 		Util::addHeader('style', ['id' => 'framaspace-hidden-apps'], $css);
-
 	}
 
-	/**
-	 * Génération du CSS pour masquer les applications
-	 */
 	private function generateHiddenAppsCSS(array $hiddenApps): string {
-		$stringApps = array_filter($hiddenApps, 'is_string');
-		$css = '/* FramaSpace - Applications masquées: ' . implode(', ', $stringApps) . " */\n";
-
-		$appPositions = [
-			'dashboard' => 1,
-			'talk' => 2,
-			'spreed' => 2,
-			'files' => 3,
-			'photos' => 4,
-			'activity' => 5,
-			'mail' => 6,
-			'contacts' => 7,
-			'calendar' => 8,
-			'notes' => 9
-		];
+		$css = '';
 
 		foreach ($hiddenApps as $appId) {
 			if (!is_string($appId) || empty($appId)) {
 				continue;
 			}
 
-			$position = $appPositions[$appId] ?? null;
-
-			if ($position !== null) {
-				$css .= "
-/* Masquer {$appId} à la position {$position} */
-li.app-menu-entry:nth-child({$position}) {
-    display: none;
-}";
-			}
-
-			$css .= "
-/* Masquer {$appId} dans le menu */
-#appmenu li[data-id=\"{$appId}\"],
-.header-appsmenu li[data-id=\"{$appId}\"] {
-    display: none;
-}";
+			$css .= ".app-menu-entry:has(a.app-menu-entry__link[href\$=\"/apps/{$appId}/\"]) { display: none; }";
 		}
-
-		$css .= '
-/* Réorganiser le menu pour éliminer les trous */
-.app-menu {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 0;
-}
-
-.app-menu li.app-menu-entry {
-    flex: 0 0 auto;
-    position: relative;
-}';
 
 		return $css;
 	}
