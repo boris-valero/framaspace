@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace OCA\FramaSpace\Db;
+namespace OCA\FramaSpace\Metrics;
 
-use OCP\AppFramework\Db\QBMapper;
 use OCP\IDBConnection;
 
-class DeckCardMapper extends QBMapper {
-	public function __construct(IDBConnection $db) {
-		parent::__construct($db, 'deck_cards');
+class Deck {
+	public function __construct(
+		private IDBConnection $db,
+	) {
 	}
 
 	public function countCards(): int {
@@ -20,5 +20,18 @@ class DeckCardMapper extends QBMapper {
 		$row = $result->fetch();
 		$result->closeCursor();
 		return (int)$row['card_count'];
+	}
+
+	/*
+	public function countBoards(): int
+	{
+	}
+	*/
+
+	public function getMetrics(): array {
+		return [
+			'cards' => $this->countCards(),
+			//'boards' => $this->countBoards()
+		];
 	}
 }
