@@ -9,15 +9,12 @@ use OCP\IRequest;
 
 class StatsController extends OCSController {
 
-	private Deck $deck;
-
 	public function __construct(
 		string $appName,
 		IRequest $request,
-		Deck $deck,
+		private Deck $deck,
 	) {
 		parent::__construct($appName, $request);
-		$this->deck = $deck;
 	}
 
 	/**
