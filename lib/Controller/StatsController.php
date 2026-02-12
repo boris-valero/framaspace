@@ -3,6 +3,7 @@
 namespace OCA\FramaSpace\Controller;
 
 use OCA\FramaSpace\Metrics\Deck;
+use OCA\FramaSpace\Metrics\Tables;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\OCSController;
 use OCP\IRequest;
@@ -13,6 +14,7 @@ class StatsController extends OCSController {
 		string $appName,
 		IRequest $request,
 		private Deck $deck,
+		private Tables $tables,
 	) {
 		parent::__construct($appName, $request);
 	}
@@ -24,7 +26,8 @@ class StatsController extends OCSController {
 	 */
 	public function getStats() {
 		return new DataResponse([
-			'deck' => $this->deck->getMetrics()
+			'deck' => $this->deck->getMetrics(),
+			'tables' => $this->tables->getMetrics()
 		]);
 	}
 }
