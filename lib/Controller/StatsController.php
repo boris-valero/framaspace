@@ -2,21 +2,20 @@
 
 namespace OCA\FramaSpace\Controller;
 
-use OCA\FramaSpace\Metrics\Deck;
-use OCA\FramaSpace\Metrics\Tables;
-use OCA\FramaSpace\Metrics\Forms;
-use OCA\FramaSpace\Metrics\Collectives;
-use OCA\FramaSpace\Metrics\Circles;
 use OCA\FramaSpace\Metrics\Calendars;
-use OCA\FramaSpace\Metrics\Conversations;
 use OCA\FramaSpace\Metrics\Chats;
+use OCA\FramaSpace\Metrics\Circles;
+use OCA\FramaSpace\Metrics\Collectives;
+use OCA\FramaSpace\Metrics\Conversations;
+use OCA\FramaSpace\Metrics\Deck;
 use OCA\FramaSpace\Metrics\Filecache;
+use OCA\FramaSpace\Metrics\Forms;
+use OCA\FramaSpace\Metrics\Tables;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\OCSController;
 use OCP\IRequest;
 
-class StatsController extends OCSController
-{
+class StatsController extends OCSController {
 
 	public function __construct(
 		string $appName,
@@ -39,8 +38,7 @@ class StatsController extends OCSController
 	 * @NoCSRFRequired
 	 * @CORS
 	 */
-	public function getStats()
-	{
+	public function getStats() {
 		return new DataResponse([
 			'deck' => $this->deck->getMetrics(),
 			'tables' => $this->tables->getMetrics(),

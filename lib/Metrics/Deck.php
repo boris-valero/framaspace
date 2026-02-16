@@ -6,14 +6,13 @@ namespace OCA\FramaSpace\Metrics;
 
 use OCP\IDBConnection;
 
-class Deck
-{
+class Deck {
 	public function __construct(
 		private IDBConnection $db,
-	) {}
+	) {
+	}
 
-	public function countCards(): int
-	{
+	public function countCards(): int {
 		$qb = $this->db->getQueryBuilder();
 		$qb->selectAlias($qb->createFunction('COUNT(*)'), 'card_count')
 			->from('deck_cards');
@@ -23,8 +22,7 @@ class Deck
 		return (int)$row['card_count'];
 	}
 
-	public function countBoards(): int
-	{
+	public function countBoards(): int {
 		$qb = $this->db->getQueryBuilder();
 		$qb->selectAlias($qb->createFunction('COUNT(*)'), 'board_count')
 			->from('deck_boards');
@@ -34,8 +32,7 @@ class Deck
 		return (int)$row['board_count'];
 	}
 
-	public function countStacks(): int
-	{
+	public function countStacks(): int {
 		$qb = $this->db->getQueryBuilder();
 		$qb->selectAlias($qb->createFunction('COUNT(*)'), 'stack_count')
 			->from('deck_stacks');
@@ -45,8 +42,7 @@ class Deck
 		return (int)$row['stack_count'];
 	}
 
-	public function getMetrics(): array
-	{
+	public function getMetrics(): array {
 		return [
 			'cards' => $this->countCards(),
 			'boards' => $this->countBoards(),
