@@ -9,6 +9,7 @@ use OCA\FramaSpace\Metrics\Collectives;
 use OCA\FramaSpace\Metrics\Circles;
 use OCA\FramaSpace\Metrics\Calendars;
 use OCA\FramaSpace\Metrics\Conversations;
+use OCA\FramaSpace\Metrics\Chats;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\OCSController;
 use OCP\IRequest;
@@ -26,6 +27,7 @@ class StatsController extends OCSController
 		private Circles $circles,
 		private Calendars $calendars,
 		private Conversations $conversations,
+		private Chats $chats,
 	) {
 		parent::__construct($appName, $request);
 	}
@@ -44,7 +46,8 @@ class StatsController extends OCSController
 			'collectives' => $this->collectives->getMetrics(),
 			'circles' => $this->circles->getMetrics(),
 			'calendars' => $this->calendars->getMetrics(),
-			'conversations' => $this->conversations->getMetrics()
+			'conversations' => $this->conversations->getMetrics(),
+			'chats' => $this->chats->getMetrics()
 		]);
 	}
 }
