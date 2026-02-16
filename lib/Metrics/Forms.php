@@ -6,6 +6,10 @@ namespace OCA\FramaSpace\Metrics;
 
 use OCP\IDBConnection;
 
+/**
+ * @psalm-suppress UnusedClass
+ */
+
 class Forms {
 	public function __construct(
 		private IDBConnection $db,
