@@ -6,11 +6,16 @@ namespace OCA\FramaSpace\Metrics;
 
 use OCP\IDBConnection;
 
+/**
+ * @psalm-suppress PossiblyUnusedMethod, MixedAssignment, MixedArrayAccess
+ */
 class Collectives {
+
 	public function __construct(
 		private IDBConnection $db,
 	) {
 	}
+
 	public function collectivesNumber(): int {
 		$qb = $this->db->getQueryBuilder();
 		$qb->selectAlias($qb->createFunction('COUNT(*)'), 'collectives_number')

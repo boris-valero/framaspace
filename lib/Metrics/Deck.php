@@ -6,7 +6,11 @@ namespace OCA\FramaSpace\Metrics;
 
 use OCP\IDBConnection;
 
+/**
+ * @psalm-suppress PossiblyUnusedMethod, MixedAssignment, MixedArrayAccess
+ */
 class Deck {
+
 	public function __construct(
 		private IDBConnection $db,
 	) {

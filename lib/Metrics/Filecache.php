@@ -7,10 +7,10 @@ namespace OCA\FramaSpace\Metrics;
 use OCP\IDBConnection;
 
 /**
- * @psalm-suppress UnusedClass
+ * @psalm-suppress PossiblyUnusedMethod, MixedAssignment, MixedArrayAccess
  */
-
 class Filecache {
+
 	public function __construct(
 		private IDBConnection $db,
 	) {
@@ -33,7 +33,7 @@ class Filecache {
 
 	public function getMetrics(): array {
 		return [
-			'storage_gb' => $this->getTotalStorageSizeInGB(),
+			'Storage Size in GB' => $this->getTotalStorageSizeInGB(),
 		];
 	}
 }

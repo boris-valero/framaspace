@@ -44,13 +44,13 @@ class StatsController extends OCSController {
 	/**
 	 * Get statistics for all apps
 	 *
-	 * @return DataResponse<Http::STATUS_OK, array{deck: array, tables: array, forms: array, collectives: array, circles: array, calendars: array, conversations: array, chats: array, filecache: array}, array{}>
+	 * @return DataResponse<200, array{deck: array, tables: array, forms: array, collectives: array, circles: array, calendars: array, conversations: array, chats: array, filecache: array}, array{}>
 	 */
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
 	#[CORS]
 	#[ApiRoute(verb: 'GET', url: '/api/v1/stats')]
-	public function getStats() {
+	public function getStats(): DataResponse {
 		return new DataResponse([
 			'deck' => $this->deck->getMetrics(),
 			'tables' => $this->tables->getMetrics(),

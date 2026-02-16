@@ -6,7 +6,11 @@ namespace OCA\FramaSpace\Metrics;
 
 use OCP\IDBConnection;
 
+/**
+ * @psalm-suppress PossiblyUnusedMethod, MixedAssignment, MixedArrayAccess
+ */
 class Conversations {
+
 	public function __construct(
 		private IDBConnection $db,
 	) {
