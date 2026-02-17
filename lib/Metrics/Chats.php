@@ -31,7 +31,7 @@ class Chats {
 
 	public function getMetrics(): array {
 		return [
-			'Number of Messages' => $this->countChats()
+			'Number of messages' => $this->countChats()
 		];
 	}
 }

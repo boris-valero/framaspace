@@ -30,7 +30,7 @@ class Conversations {
 
 	public function getMetrics(): array {
 		return [
-			'Number of Conversations' => $this->countConversations()
+			'conversations' => $this->countConversations()
 		];
 	}
 }

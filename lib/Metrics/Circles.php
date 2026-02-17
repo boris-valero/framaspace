@@ -30,7 +30,7 @@ class Circles {
 
 	public function getMetrics(): array {
 		return [
-			'Number of circles' => $this->circlesCount()
+			'circles' => $this->circlesCount()
 		];
 	}
 }

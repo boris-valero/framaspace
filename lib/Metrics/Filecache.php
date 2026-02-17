@@ -35,7 +35,7 @@ class Filecache {
 
 	public function getMetrics(): array {
 		return [
-			'Storage Size in GB' => $this->getTotalStorageSizeInGB(),
+			'storage' => $this->getTotalStorageSizeInGB(),
 		];
 	}
 }

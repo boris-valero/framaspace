@@ -72,11 +72,11 @@ class Calendars {
 
 	public function getMetrics(): array {
 		return [
-			'Number of Calendars' => $this->countCalendars(),
-			'Number of Addressbooks' => $this->countAddressbooks(),
-			'Number of Contacts' => $this->countContacts(),
-			'Number of Events' => $this->countEvents(),
-			'Number of Tasks' => $this->countTasks()
+			'calendars' => $this->countCalendars(),
+			'addressbooks' => $this->countAddressbooks(),
+			'contacts' => $this->countContacts(),
+			'events' => $this->countEvents(),
+			'tasks' => $this->countTasks()
 		];
 	}
 }

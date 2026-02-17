@@ -40,8 +40,8 @@ class Collectives {
 
 	public function getMetrics(): array {
 		return [
-			'Number of collectives' => $this->collectivesNumber(),
-			'Number of Pages' => $this->collectivesPages()
+			'collectives' => $this->collectivesNumber(),
+			'pages' => $this->collectivesPages()
 		];
 	}
 }
