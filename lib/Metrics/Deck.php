@@ -10,7 +10,9 @@ use OCP\IDBConnection;
  * @psalm-suppress PossiblyUnusedMethod, MixedAssignment, MixedArrayAccess
  */
 class Deck {
-
+	/**
+	 * @psalm-suppress PossiblyUnusedMethod
+	 */
 	public function __construct(
 		private IDBConnection $db,
 	) {

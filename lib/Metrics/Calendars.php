@@ -9,17 +9,16 @@ use OCP\IDBConnection;
 /**
  * @psalm-suppress PossiblyUnusedMethod, MixedAssignment, MixedArrayAccess
  */
-class Calendars
-{
+class Calendars {
 	/**
 	 * @psalm-suppress PossiblyUnusedMethod
 	 */
 	public function __construct(
 		private IDBConnection $db,
-	) {}
+	) {
+	}
 
-	public function countCalendars(): int
-	{
+	public function countCalendars(): int {
 		$qb = $this->db->getQueryBuilder();
 		$qb->selectAlias($qb->createFunction('COUNT(*)'), 'calendar_count')
 			->from('calendars');
@@ -29,8 +28,7 @@ class Calendars
 		return (int)$row['calendar_count'];
 	}
 
-	public function countAddressbooks(): int
-	{
+	public function countAddressbooks(): int {
 		$qb = $this->db->getQueryBuilder();
 		$qb->selectAlias($qb->createFunction('COUNT(*)'), 'addressbook_count')
 			->from('addressbooks');
@@ -40,8 +38,7 @@ class Calendars
 		return (int)$row['addressbook_count'];
 	}
 
-	public function countContacts(): int
-	{
+	public function countContacts(): int {
 		$qb = $this->db->getQueryBuilder();
 		$qb->selectAlias($qb->createFunction('COUNT(*)'), 'contact_count')
 			->from('cards');
@@ -51,8 +48,7 @@ class Calendars
 		return (int)$row['contact_count'];
 	}
 
-	public function countEvents(): int
-	{
+	public function countEvents(): int {
 		$qb = $this->db->getQueryBuilder();
 		$qb->selectAlias($qb->createFunction('COUNT(*)'), 'event_count')
 			->from('calendarobjects')
@@ -63,8 +59,7 @@ class Calendars
 		return (int)$row['event_count'];
 	}
 
-	public function countTasks(): int
-	{
+	public function countTasks(): int {
 		$qb = $this->db->getQueryBuilder();
 		$qb->selectAlias($qb->createFunction('COUNT(*)'), 'task_count')
 			->from('calendarobjects')
@@ -75,8 +70,7 @@ class Calendars
 		return (int)$row['task_count'];
 	}
 
-	public function getMetrics(): array
-	{
+	public function getMetrics(): array {
 		return [
 			'Number of Calendars' => $this->countCalendars(),
 			'Number of Addressbooks' => $this->countAddressbooks(),
