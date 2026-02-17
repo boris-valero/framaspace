@@ -44,7 +44,7 @@ class StatsController extends OCSController {
 	/**
 	 * Get statistics for all apps
 	 *
-	 * @return DataResponse<200, array{deck: array, tables: array, forms: array, collectives: array, circles: array, calendars: array, conversations: array, chats: array, filecache: array}, array{}>
+	 * @return DataResponse<200, array{deck: array, tables: array, forms: array, collectives: array, circles: array, calendars: array, talk: array, filecache: array}, array{}>
 	 */
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
@@ -58,8 +58,10 @@ class StatsController extends OCSController {
 			'collectives' => $this->collectives->getMetrics(),
 			'circles' => $this->circles->getMetrics(),
 			'calendars' => $this->calendars->getMetrics(),
-			'conversations' => $this->conversations->getMetrics(),
-			'chats' => $this->chats->getMetrics(),
+			'talk' => array_merge(
+				$this->conversations->getMetrics(),
+				$this->chats->getMetrics()
+			),
 			'filecache' => $this->filecache->getMetrics()
 		]);
 	}
