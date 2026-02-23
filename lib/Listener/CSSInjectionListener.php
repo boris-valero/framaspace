@@ -11,10 +11,16 @@ use OCP\EventDispatcher\IEventListener;
 use OCP\IConfig;
 use OCP\Util;
 
+/**
+ * @implements IEventListener<BeforeTemplateRenderedEvent>
+ */
 class CSSInjectionListener implements IEventListener {
 
 	private IConfig $config;
 
+	/**
+	 * @psalm-suppress PossiblyUnusedMethod
+	 */
 	public function __construct(IConfig $config) {
 		$this->config = $config;
 	}
@@ -24,6 +30,7 @@ class CSSInjectionListener implements IEventListener {
 			return;
 		}
 
+		/** @psalm-suppress DeprecatedMethod */
 		$hiddenAppsJson = $this->config->getAppValue(Application::APP_ID, 'hidden_apps', '[]');
 		$decoded = json_decode($hiddenAppsJson, true);
 
