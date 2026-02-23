@@ -7,26 +7,36 @@ use OCP\App\IAppManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\INavigationManager;
 use OCP\IRequest;
 use OCP\IUserSession;
 
+/**
+ * @psalm-suppress UnusedClass
+ */
 class AdminApiController extends Controller {
 	private IAppManager $appManager;
 	private ConfigProxy $config;
 	private IUserSession $userSession;
+	private INavigationManager $navigationManager;
 
-	public function __construct($AppName, IRequest $request, IAppManager $appManager, ConfigProxy $config, IUserSession $userSession) {
+	/**
+	 * @psalm-suppress PossiblyUnusedMethod
+	 */
+	public function __construct(string $AppName, IRequest $request, IAppManager $appManager, ConfigProxy $config, IUserSession $userSession, INavigationManager $navigationManager) {
 		parent::__construct($AppName, $request);
 		$this->appManager = $appManager;
 		$this->config = $config;
 		$this->userSession = $userSession;
+		$this->navigationManager = $navigationManager;
 	}
 
 	#[NoCSRFRequired]
-	public function getApps() {
-		$navigationEntries = \OC::$server->getNavigationManager()->getAll();
+	public function getApps(): DataResponse {
+		$navigationEntries = $this->navigationManager->getAll();
 		$hiddenApps = $this->config->getAppValueArray('hidden_apps');
 		$protectedApps = ['files', 'activity'];
+		/** @var array<array<string, mixed>> $appsData */
 		$appsData = [];
 		$user = $this->userSession->getUser();
 		foreach ($navigationEntries as $entry) {
@@ -47,9 +57,9 @@ class AdminApiController extends Controller {
 	}
 
 	#[NoCSRFRequired]
-	public function setHidden() {
+	public function setHidden(): DataResponse {
 		$params = $this->request->getParams();
-		$hidden = isset($params['hidden']) ? $params['hidden'] : [];
+		$hidden = isset($params['hidden']) ? (array)$params['hidden'] : [];
 		$this->config->setAppValueArray('hidden_apps', $hidden);
 		return new DataResponse(['success' => true]);
 	}
