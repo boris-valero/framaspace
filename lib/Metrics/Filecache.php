@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace OCA\FramaSpace\Metrics;
 
 use OCP\IDBConnection;
+use OCP\DB\QueryBuilder\IQueryBuilder;
 
 /**
  * @psalm-suppress PossiblyUnusedMethod, MixedAssignment, MixedArrayAccess
@@ -29,9 +30,21 @@ class Filecache {
 		return (int)($row['total_size'] ?? 0);
 	}
 
+	public function countFiles(): int {
+		$qb = $this->db->getQueryBuilder();
+		$qb->selectAlias($qb->createFunction('COUNT(*)'), 'file_count')
+			->from('filecache')
+			->where($qb->expr()->neq('mimetype', $qb->createNamedParameter(2, IQueryBuilder::PARAM_INT)));
+		$result = $qb->executeQuery();
+		$row = $result->fetch();
+		$result->closeCursor();
+		return (int)($row['file_count'] ?? 0);
+	}
+
 	public function getMetrics(): array {
 		return [
 			'storage' => $this->getTotalStorageSize(),
+			'files' => $this->countFiles(),
 		];
 	}
 }
