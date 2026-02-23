@@ -8,6 +8,7 @@ use OCP\Settings\ISettings;
 
 /**
  * Fournit le panneau d'administration FramaSpace (intégration Vue 3)
+ * @psalm-suppress UnusedClass
  */
 class Admin implements ISettings {
 
