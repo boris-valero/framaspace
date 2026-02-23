@@ -23,6 +23,9 @@ class ConfigProxy {
 		$this->config->setValueString($appId ?? Application::APP_ID, $name, $value);
 	}
 
+	/**
+	 * @psalm-suppress PossiblyUnusedMethod
+	 */
 	public function getAppValueArray(string $name, string $default = '[]', ?string $appId = null): array {
 		return (array)json_decode($this->getAppValue($name, $default, $appId), true);
 	}
