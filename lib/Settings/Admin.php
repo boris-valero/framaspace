@@ -11,15 +11,15 @@ use OCP\Settings\ISettings;
  */
 class Admin implements ISettings {
 
-    public function getForm(): TemplateResponse {
-        return new TemplateResponse(Application::APP_ID, 'settings/admin-form', []);
-    }
+	public function getForm(): TemplateResponse {
+		return new TemplateResponse(Application::APP_ID, 'settings/admin-form', []);
+	}
 
-    public function getSection(): string {
-        return Application::APP_ID;
-    }
+	public function getSection(): string {
+		return Application::APP_ID;
+	}
 
-    public function getPriority(): int {
-        return 0;
-    }
+	public function getPriority(): int {
+		return 0;
+	}
 }

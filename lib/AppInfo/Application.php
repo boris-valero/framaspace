@@ -15,6 +15,9 @@ use OCP\AppFramework\Http\Events\BeforeTemplateRenderedEvent;
 class Application extends App implements IBootstrap {
 	public const APP_ID = 'framaspace';
 
+	/**
+	 * @psalm-suppress PossiblyUnusedMethod
+	 */
 	public function __construct() {
 		parent::__construct(self::APP_ID);
 	}
@@ -23,11 +26,11 @@ class Application extends App implements IBootstrap {
 		$context->registerEventListener(BeforeTemplateRenderedEvent::class, CSSInjectionListener::class);
 
 		// Enregistrement explicite du service ConfigProxy si nécessaire
-		$context->registerService(ConfigProxy::class, function($c) {
+		$context->registerService(ConfigProxy::class, function ($c) {
 			// Injection du service de config natif de Nextcloud si besoin
-			return new ConfigProxy(
-				$c->query(\OCP\IAppConfig::class)
-			);
+			/** @var \OCP\IAppConfig $appConfig */
+			$appConfig = $c->get(\OCP\IAppConfig::class);
+			return new ConfigProxy($appConfig);
 		});
 	}
 
