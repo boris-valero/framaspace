@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace OCA\FramaSpace\Metrics;
 
-use OCP\IDBConnection;
 use OCP\DB\QueryBuilder\IQueryBuilder;
+use OCP\IDBConnection;
 
 /**
  * @psalm-suppress PossiblyUnusedMethod, MixedAssignment, MixedArrayAccess
