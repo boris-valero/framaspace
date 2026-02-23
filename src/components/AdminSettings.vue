@@ -15,8 +15,7 @@
 							v-model="app.hidden"
 							type="checkbox"
 							:disabled="app.protected"
-							:title="app.protected ? t('framaspace', 'This application cannot be hidden') : ''"
-						>
+							:title="app.protected ? t('framaspace', 'This application cannot be hidden') : ''" />
 					</td>
 				</tr>
 			</tbody>
@@ -44,7 +43,7 @@ onMounted(async () => {
 		apps.value = await response.json()
 	} catch (e) {
 		status.value = t('framaspace', 'Loading error')
-		statusClass.value = 'error',
+		statusClass.value = 'error'
 	}
 })
 
@@ -64,10 +63,10 @@ const save = async () => {
 		})
 		if (!response.ok) throw new Error('Erreur serveur')
 		status.value = t('framaspace', 'Saved!')
-		statusClass.value = 'success',
+		statusClass.value = 'success'
 	} catch (e) {
 		status.value = t('framaspace', 'Save error')
-		statusClass.value = 'error',
+		statusClass.value = 'error'
 	}
 }
 </script>
