@@ -41,10 +41,48 @@ class Filecache {
 		return (int)($row['file_count'] ?? 0);
 	}
 
+	/**
+	 * @return array<int, array{username: string, size_bytes: int}>
+	 */
+	public function getStorageByUser(): array {
+		$qb = $this->db->getQueryBuilder();
+
+		$qb->select('s.id')
+			->selectAlias(
+				$qb->func()->sum('f.size'),
+				'total_size'
+			)
+			->from('filecache', 'f')
+			->innerJoin('f', 'storages', 's', $qb->expr()->eq('f.storage', 's.numeric_id'))
+			->where($qb->expr()->like('s.id', $qb->createNamedParameter('home::%', IQueryBuilder::PARAM_STR)))
+			->andWhere($qb->expr()->neq('f.mimetype', $qb->createNamedParameter(2, IQueryBuilder::PARAM_INT)))
+			->andWhere($qb->expr()->like('f.path', $qb->createNamedParameter('files/%', IQueryBuilder::PARAM_STR)))
+			->groupBy('s.id')
+			->orderBy('total_size', 'DESC');
+
+		$result = $qb->executeQuery();
+		$rows = $result->fetchAll();
+		$result->closeCursor();
+
+		$users = [];
+		foreach ($rows as $row) {
+			$username = preg_replace('/^home::/', '', (string)$row['id']) ?? '';
+			$size_bytes = (int)($row['total_size'] ?? 0);
+
+			$users[] = [
+				'username' => $username,
+				'size_bytes' => $size_bytes
+			];
+		}
+
+		return $users;
+	}
+
 	public function getMetrics(): array {
 		return [
 			'storage' => $this->getTotalStorageSize(),
 			'files' => $this->countFiles(),
+			'users' => $this->getStorageByUser(),
 		];
 	}
 }
