@@ -76,11 +76,44 @@ class Filecache {
 		return $users;
 	}
 
+	/**
+	 * @return array<int, array{filename: string, size_bytes: int, path: string, owner: string}>
+	 */
+	public function getTop10BiggestFiles(): array {
+		$qb = $this->db->getQueryBuilder();
+
+		$qb->select('f.name', 'f.size', 'f.path', 's.id')
+			->from('filecache', 'f')
+			->innerJoin('f', 'storages', 's', $qb->expr()->eq('f.storage', 's.numeric_id'))
+			->where($qb->expr()->neq('f.mimetype', $qb->createNamedParameter(2, IQueryBuilder::PARAM_INT)))
+			->andWhere($qb->expr()->like('s.id', $qb->createNamedParameter('home::%', IQueryBuilder::PARAM_STR)))
+			->andWhere($qb->expr()->like('f.path', $qb->createNamedParameter('files/%', IQueryBuilder::PARAM_STR)))
+			->orderBy('f.size', 'DESC')
+			->setMaxResults(10);
+
+		$result = $qb->executeQuery();
+		$rows = $result->fetchAll();
+		$result->closeCursor();
+
+		$files = [];
+		foreach ($rows as $row) {
+			$files[] = [
+				'filename' => (string)($row['name'] ?? ''),
+				'size_bytes' => (int)($row['size'] ?? 0),
+				'path' => (string)($row['path'] ?? ''),
+				'owner' => preg_replace('/^home::/', '', (string)$row['id']) ?? '',
+			];
+		}
+
+		return $files;
+	}
+
 	public function getMetrics(): array {
 		return [
 			'storage' => $this->getTotalStorageSize(),
 			'files' => $this->countFiles(),
 			'top5users' => $this->getTop5StorageUsers(),
+			'top10files' => $this->getTop10BiggestFiles(),
 		];
 	}
 }
