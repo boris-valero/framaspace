@@ -46,7 +46,6 @@ class Filecache {
 	 */
 	public function getTop5StorageUsers(): array {
 		$qb = $this->db->getQueryBuilder();
-
 		$qb->select('s.id')
 			->selectAlias(
 				$qb->func()->sum('f.size'),
@@ -60,11 +59,9 @@ class Filecache {
 			->groupBy('s.id')
 			->orderBy('total_size', 'DESC')
 			->setMaxResults(5);
-
 		$result = $qb->executeQuery();
 		$rows = $result->fetchAll();
 		$result->closeCursor();
-
 		$users = [];
 		foreach ($rows as $row) {
 			$users[] = [
@@ -72,7 +69,6 @@ class Filecache {
 				'size_bytes' => (int)($row['total_size'] ?? 0),
 			];
 		}
-
 		return $users;
 	}
 
@@ -81,7 +77,6 @@ class Filecache {
 	 */
 	public function getTop10BiggestFiles(): array {
 		$qb = $this->db->getQueryBuilder();
-
 		$qb->select('f.name', 'f.size', 'f.path', 's.id')
 			->from('filecache', 'f')
 			->innerJoin('f', 'storages', 's', $qb->expr()->eq('f.storage', 's.numeric_id'))
@@ -90,11 +85,9 @@ class Filecache {
 			->andWhere($qb->expr()->like('f.path', $qb->createNamedParameter('files/%', IQueryBuilder::PARAM_STR)))
 			->orderBy('f.size', 'DESC')
 			->setMaxResults(10);
-
 		$result = $qb->executeQuery();
 		$rows = $result->fetchAll();
 		$result->closeCursor();
-
 		$files = [];
 		foreach ($rows as $row) {
 			$files[] = [
@@ -104,8 +97,19 @@ class Filecache {
 				'owner' => preg_replace('/^home::/', '', (string)$row['id']) ?? '',
 			];
 		}
-
 		return $files;
+	}
+
+	public function getTotalVersionsStorage(): int {
+		$qb = $this->db->getQueryBuilder();
+		$qb->selectAlias($qb->func()->sum('size'), 'total_size')
+			->from('filecache')
+			->where($qb->expr()->neq('mimetype', $qb->createNamedParameter(2, IQueryBuilder::PARAM_INT)))
+			->andWhere($qb->expr()->like('path', $qb->createNamedParameter('files_versions/%', IQueryBuilder::PARAM_STR)));
+		$result = $qb->executeQuery();
+		$totalSize = (int)($result->fetchOne() ?? 0);
+		$result->closeCursor();
+		return $totalSize;
 	}
 
 	public function getMetrics(): array {
@@ -114,6 +118,7 @@ class Filecache {
 			'files' => $this->countFiles(),
 			'top5users' => $this->getTop5StorageUsers(),
 			'top10files' => $this->getTop10BiggestFiles(),
+			'version_storage' => $this->getTotalVersionsStorage(),
 		];
 	}
 }
