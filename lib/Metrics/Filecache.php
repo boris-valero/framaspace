@@ -44,7 +44,7 @@ class Filecache {
 	/**
 	 * @return array<int, array{username: string, size_bytes: int}>
 	 */
-	public function getStorageByUser(): array {
+	public function getTop5StorageUsers(): array {
 		$qb = $this->db->getQueryBuilder();
 
 		$qb->select('s.id')
@@ -58,7 +58,8 @@ class Filecache {
 			->andWhere($qb->expr()->neq('f.mimetype', $qb->createNamedParameter(2, IQueryBuilder::PARAM_INT)))
 			->andWhere($qb->expr()->like('f.path', $qb->createNamedParameter('files/%', IQueryBuilder::PARAM_STR)))
 			->groupBy('s.id')
-			->orderBy('total_size', 'DESC');
+			->orderBy('total_size', 'DESC')
+			->setMaxResults(5);
 
 		$result = $qb->executeQuery();
 		$rows = $result->fetchAll();
@@ -66,12 +67,9 @@ class Filecache {
 
 		$users = [];
 		foreach ($rows as $row) {
-			$username = preg_replace('/^home::/', '', (string)$row['id']) ?? '';
-			$size_bytes = (int)($row['total_size'] ?? 0);
-
 			$users[] = [
-				'username' => $username,
-				'size_bytes' => $size_bytes
+				'username' => preg_replace('/^home::/', '', (string)$row['id']) ?? '',
+				'size_bytes' => (int)($row['total_size'] ?? 0),
 			];
 		}
 
@@ -82,7 +80,7 @@ class Filecache {
 		return [
 			'storage' => $this->getTotalStorageSize(),
 			'files' => $this->countFiles(),
-			'users' => $this->getStorageByUser(),
+			'top5users' => $this->getTop5StorageUsers(),
 		];
 	}
 }
