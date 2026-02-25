@@ -59,7 +59,7 @@ php-cs-fixer:
     - composer run cs:check || ( echo 'Please run `composer run cs:fix` to format your code' && exit 1 )
 
 lint-js:
-  image: node:20
+  image: node:24
   stage: lint
   before_script:
     - npm ci
@@ -72,13 +72,13 @@ static-analysis:
   image: php:8.2-cli
   parallel:
     matrix:
-      - NEXTCLOUD_VERSION: [stable31, stable32]
+      - NEXTCLOUD_VERSION: [stable31, stable32, stable33]
   script:
     - composer run psalm
 
 build-js:
   stage: build
-  image: node:20
+  image: node:24
   before_script:
     - npm ci
   script:
