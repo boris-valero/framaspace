@@ -13,7 +13,6 @@ use OCA\FramaSpace\Metrics\Forms;
 use OCA\FramaSpace\Metrics\Tables;
 use OCP\AppFramework\Http\Attribute\ApiRoute;
 use OCP\AppFramework\Http\Attribute\CORS;
-use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\OCSController;
@@ -46,7 +45,6 @@ class StatsController extends OCSController {
 	 *
 	 * @return DataResponse<200, array{deck: array, tables: array, forms: array, collectives: array, circles: array, calendars: array, talk: array, filecache: array}, array{}>
 	 */
-	#[NoAdminRequired]
 	#[NoCSRFRequired]
 	#[CORS]
 	#[ApiRoute(verb: 'GET', url: '/api/v1/stats')]
