@@ -112,13 +112,44 @@ class Filecache {
 		return $totalSize;
 	}
 
+	/**
+	 * @return array<int, array{username: string, files_count: int, trash_bytes: int}>
+	 */
+	public function getTop3TrashByUser(): array {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select('s.id')
+			->selectAlias($qb->func()->count('f.fileid'), 'files_count')
+			->selectAlias($qb->func()->sum('f.size'), 'total_size')
+			->from('filecache', 'f')
+			->innerJoin('f', 'storages', 's', $qb->expr()->eq('f.storage', 's.numeric_id'))
+			->where($qb->expr()->like('s.id', $qb->createNamedParameter('home::%', IQueryBuilder::PARAM_STR)))
+			->andWhere($qb->expr()->neq('f.mimetype', $qb->createNamedParameter(2, IQueryBuilder::PARAM_INT)))
+			->andWhere($qb->expr()->like('f.path', $qb->createNamedParameter('files_trashbin/%', IQueryBuilder::PARAM_STR)))
+			->groupBy('s.id')
+			->orderBy('total_size', 'DESC')
+			->setMaxResults(3);
+		$result = $qb->executeQuery();
+		$rows = $result->fetchAll();
+		$result->closeCursor();
+		$users = [];
+		foreach ($rows as $row) {
+			$users[] = [
+				'username' => preg_replace('/^home::/', '', (string)$row['id']) ?? '',
+				'files_count' => (int)($row['files_count'] ?? 0),
+				'trash_bytes' => (int)($row['total_size'] ?? 0),
+			];
+		}
+		return $users;
+	}
+
 	public function getMetrics(): array {
 		return [
 			'storage' => $this->getTotalStorageSize(),
 			'files' => $this->countFiles(),
 			'top5users' => $this->getTop5StorageUsers(),
-			'top10files' => $this->getTop10BiggestFiles(),
+			'top10biggestfiles' => $this->getTop10BiggestFiles(),
 			'version_storage' => $this->getTotalVersionsStorage(),
+			'top3biggesttrash' => $this->getTop3TrashByUser(),
 		];
 	}
 }
