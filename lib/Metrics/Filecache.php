@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace OCA\FramaSpace\Metrics;
 
+use OCA\FramaSpace\Config\MetricsConfig;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 
@@ -44,7 +45,7 @@ class Filecache {
 	/**
 	 * @return array<int, array{username: string, size_bytes: int}>
 	 */
-	public function getTop5StorageUsers(): array {
+	public function getTopStorageUsers(): array {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('s.id')
 			->selectAlias(
@@ -58,7 +59,7 @@ class Filecache {
 			->andWhere($qb->expr()->like('f.path', $qb->createNamedParameter('files/%', IQueryBuilder::PARAM_STR)))
 			->groupBy('s.id')
 			->orderBy('total_size', 'DESC')
-			->setMaxResults(5);
+			->setMaxResults(MetricsConfig::N_TOP_STORAGE_USERS);
 		$result = $qb->executeQuery();
 		$rows = $result->fetchAll();
 		$result->closeCursor();
@@ -75,7 +76,7 @@ class Filecache {
 	/**
 	 * @return array<int, array{filename: string, size_bytes: int, path: string, owner: string}>
 	 */
-	public function getTop10BiggestFiles(): array {
+	public function getTopBiggestFiles(): array {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('f.name', 'f.size', 'f.path', 's.id')
 			->from('filecache', 'f')
@@ -84,7 +85,7 @@ class Filecache {
 			->andWhere($qb->expr()->like('s.id', $qb->createNamedParameter('home::%', IQueryBuilder::PARAM_STR)))
 			->andWhere($qb->expr()->like('f.path', $qb->createNamedParameter('files/%', IQueryBuilder::PARAM_STR)))
 			->orderBy('f.size', 'DESC')
-			->setMaxResults(10);
+			->setMaxResults(MetricsConfig::N_TOP_BIGGEST_FILES);
 		$result = $qb->executeQuery();
 		$rows = $result->fetchAll();
 		$result->closeCursor();
@@ -115,7 +116,7 @@ class Filecache {
 	/**
 	 * @return array<int, array{username: string, files_count: int, trash_bytes: int}>
 	 */
-	public function getTop3TrashByUser(): array {
+	public function getTopTrashByUser(): array {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('s.id')
 			->selectAlias($qb->func()->count('f.fileid'), 'files_count')
@@ -127,7 +128,7 @@ class Filecache {
 			->andWhere($qb->expr()->like('f.path', $qb->createNamedParameter('files_trashbin/%', IQueryBuilder::PARAM_STR)))
 			->groupBy('s.id')
 			->orderBy('total_size', 'DESC')
-			->setMaxResults(3);
+			->setMaxResults(MetricsConfig::N_TOP_TRASH_USERS);
 		$result = $qb->executeQuery();
 		$rows = $result->fetchAll();
 		$result->closeCursor();
@@ -146,10 +147,10 @@ class Filecache {
 		return [
 			'storage' => $this->getTotalStorageSize(),
 			'files' => $this->countFiles(),
-			'top5users' => $this->getTop5StorageUsers(),
-			'top10biggestfiles' => $this->getTop10BiggestFiles(),
+			'top5users' => $this->getTopStorageUsers(),
+			'top10biggestfiles' => $this->getTopBiggestFiles(),
 			'version_storage' => $this->getTotalVersionsStorage(),
-			'top3biggesttrash' => $this->getTop3TrashByUser(),
+			'top3biggesttrash' => $this->getTopTrashByUser(),
 		];
 	}
 }
