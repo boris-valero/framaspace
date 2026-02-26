@@ -15,13 +15,17 @@ class Filecache {
 	/**
 	 * @psalm-suppress PossiblyUnusedMethod
 	 */
-	public function __construct(
-		private IDBConnection $db,
-	) {
+	private IDBConnection $connection;
+
+	/**
+	 * @psalm-suppress PossiblyUnusedMethod
+	 */
+	public function __construct(IDBConnection $connection) {
+		$this->connection = $connection;
 	}
 
 	public function getTotalStorageSize(): int {
-		$qb = $this->db->getQueryBuilder();
+		$qb = $this->connection->getQueryBuilder();
 		$qb->selectAlias($qb->createFunction('SUM(size)'), 'total_size')
 			->from('filecache')
 			->where($qb->expr()->gt('storage', $qb->createNamedParameter(0)));
@@ -32,10 +36,10 @@ class Filecache {
 	}
 
 	public function countFiles(): int {
-		$qb = $this->db->getQueryBuilder();
+		$qb = $this->connection->getQueryBuilder();
 		$qb->selectAlias($qb->createFunction('COUNT(*)'), 'file_count')
 			->from('filecache')
-			->where($qb->expr()->neq('mimetype', $qb->createNamedParameter(2, IQueryBuilder::PARAM_INT)));
+			->where($qb->expr()->neq('mimetype', $qb->createNamedParameter(MetricsConfig::MIMETYPE_FOLDER, IQueryBuilder::PARAM_INT)));
 		$result = $qb->executeQuery();
 		$row = $result->fetch();
 		$result->closeCursor();
@@ -46,7 +50,8 @@ class Filecache {
 	 * @return array<int, array{username: string, size_bytes: int}>
 	 */
 	public function getTopStorageUsers(): array {
-		$qb = $this->db->getQueryBuilder();
+		$qb = $this->connection->getQueryBuilder();
+
 		$qb->select('s.id')
 			->selectAlias(
 				$qb->func()->sum('f.size'),
@@ -54,12 +59,13 @@ class Filecache {
 			)
 			->from('filecache', 'f')
 			->innerJoin('f', 'storages', 's', $qb->expr()->eq('f.storage', 's.numeric_id'))
-			->where($qb->expr()->like('s.id', $qb->createNamedParameter('home::%', IQueryBuilder::PARAM_STR)))
-			->andWhere($qb->expr()->neq('f.mimetype', $qb->createNamedParameter(2, IQueryBuilder::PARAM_INT)))
-			->andWhere($qb->expr()->like('f.path', $qb->createNamedParameter('files/%', IQueryBuilder::PARAM_STR)))
+			->where($qb->expr()->like('s.id', $qb->createNamedParameter(MetricsConfig::STORAGE_HOME_PATTERN, IQueryBuilder::PARAM_STR)))
+			->andWhere($qb->expr()->neq('f.mimetype', $qb->createNamedParameter(MetricsConfig::MIMETYPE_FOLDER, IQueryBuilder::PARAM_INT)))
+			->andWhere($qb->expr()->like('f.path', $qb->createNamedParameter(MetricsConfig::STORAGE_FILES_PATH_PATTERN, IQueryBuilder::PARAM_STR)))
 			->groupBy('s.id')
 			->orderBy('total_size', 'DESC')
 			->setMaxResults(MetricsConfig::N_TOP_STORAGE_USERS);
+
 		$result = $qb->executeQuery();
 		$rows = $result->fetchAll();
 		$result->closeCursor();
@@ -77,15 +83,16 @@ class Filecache {
 	 * @return array<int, array{filename: string, size_bytes: int, path: string, owner: string}>
 	 */
 	public function getTopBiggestFiles(): array {
-		$qb = $this->db->getQueryBuilder();
+		$qb = $this->connection->getQueryBuilder();
 		$qb->select('f.name', 'f.size', 'f.path', 's.id')
 			->from('filecache', 'f')
 			->innerJoin('f', 'storages', 's', $qb->expr()->eq('f.storage', 's.numeric_id'))
-			->where($qb->expr()->neq('f.mimetype', $qb->createNamedParameter(2, IQueryBuilder::PARAM_INT)))
-			->andWhere($qb->expr()->like('s.id', $qb->createNamedParameter('home::%', IQueryBuilder::PARAM_STR)))
-			->andWhere($qb->expr()->like('f.path', $qb->createNamedParameter('files/%', IQueryBuilder::PARAM_STR)))
+			->where($qb->expr()->neq('f.mimetype', $qb->createNamedParameter(MetricsConfig::MIMETYPE_FOLDER, IQueryBuilder::PARAM_INT)))
+			->andWhere($qb->expr()->like('s.id', $qb->createNamedParameter(MetricsConfig::STORAGE_HOME_PATTERN, IQueryBuilder::PARAM_STR)))
+			->andWhere($qb->expr()->like('f.path', $qb->createNamedParameter(MetricsConfig::STORAGE_FILES_PATH_PATTERN, IQueryBuilder::PARAM_STR)))
 			->orderBy('f.size', 'DESC')
 			->setMaxResults(MetricsConfig::N_TOP_BIGGEST_FILES);
+
 		$result = $qb->executeQuery();
 		$rows = $result->fetchAll();
 		$result->closeCursor();
@@ -102,11 +109,11 @@ class Filecache {
 	}
 
 	public function getTotalVersionsStorage(): int {
-		$qb = $this->db->getQueryBuilder();
+		$qb = $this->connection->getQueryBuilder();
 		$qb->selectAlias($qb->func()->sum('size'), 'total_size')
 			->from('filecache')
-			->where($qb->expr()->neq('mimetype', $qb->createNamedParameter(2, IQueryBuilder::PARAM_INT)))
-			->andWhere($qb->expr()->like('path', $qb->createNamedParameter('files_versions/%', IQueryBuilder::PARAM_STR)));
+			->where($qb->expr()->neq('mimetype', $qb->createNamedParameter(MetricsConfig::MIMETYPE_FOLDER, IQueryBuilder::PARAM_INT)))
+			->andWhere($qb->expr()->like('path', $qb->createNamedParameter(MetricsConfig::STORAGE_VERSIONS_PATH_PATTERN, IQueryBuilder::PARAM_STR)));
 		$result = $qb->executeQuery();
 		$totalSize = (int)($result->fetchOne() ?? 0);
 		$result->closeCursor();
@@ -117,18 +124,19 @@ class Filecache {
 	 * @return array<int, array{username: string, files_count: int, trash_bytes: int}>
 	 */
 	public function getTopTrashByUser(): array {
-		$qb = $this->db->getQueryBuilder();
+		$qb = $this->connection->getQueryBuilder();
 		$qb->select('s.id')
 			->selectAlias($qb->func()->count('f.fileid'), 'files_count')
 			->selectAlias($qb->func()->sum('f.size'), 'total_size')
 			->from('filecache', 'f')
 			->innerJoin('f', 'storages', 's', $qb->expr()->eq('f.storage', 's.numeric_id'))
-			->where($qb->expr()->like('s.id', $qb->createNamedParameter('home::%', IQueryBuilder::PARAM_STR)))
-			->andWhere($qb->expr()->neq('f.mimetype', $qb->createNamedParameter(2, IQueryBuilder::PARAM_INT)))
-			->andWhere($qb->expr()->like('f.path', $qb->createNamedParameter('files_trashbin/%', IQueryBuilder::PARAM_STR)))
+			->where($qb->expr()->like('s.id', $qb->createNamedParameter(MetricsConfig::STORAGE_HOME_PATTERN, IQueryBuilder::PARAM_STR)))
+			->andWhere($qb->expr()->neq('f.mimetype', $qb->createNamedParameter(MetricsConfig::MIMETYPE_FOLDER, IQueryBuilder::PARAM_INT)))
+			->andWhere($qb->expr()->like('f.path', $qb->createNamedParameter(MetricsConfig::STORAGE_TRASHBIN_PATH_PATTERN, IQueryBuilder::PARAM_STR)))
 			->groupBy('s.id')
 			->orderBy('total_size', 'DESC')
 			->setMaxResults(MetricsConfig::N_TOP_TRASH_USERS);
+
 		$result = $qb->executeQuery();
 		$rows = $result->fetchAll();
 		$result->closeCursor();
