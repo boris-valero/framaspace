@@ -28,7 +28,8 @@ class Filecache {
 		$qb = $this->connection->getQueryBuilder();
 		$qb->selectAlias($qb->createFunction('SUM(size)'), 'total_size')
 			->from('filecache')
-			->where($qb->expr()->gt('storage', $qb->createNamedParameter(0)));
+			->where($qb->expr()->eq('path', $qb->createNamedParameter('')))
+			->andWhere($qb->expr()->gt('storage', $qb->createNamedParameter(0)));
 		$result = $qb->executeQuery();
 		$row = $result->fetch();
 		$result->closeCursor();
