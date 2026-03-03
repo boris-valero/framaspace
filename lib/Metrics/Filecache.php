@@ -26,10 +26,18 @@ class Filecache {
 
 	public function getTotalStorageSize(): int {
 		$qb = $this->connection->getQueryBuilder();
-		$qb->selectAlias($qb->createFunction('SUM(size)'), 'total_size')
-			->from('filecache')
-			->where($qb->expr()->eq('path', $qb->createNamedParameter('')))
-			->andWhere($qb->expr()->gt('storage', $qb->createNamedParameter(0)));
+		$qb->selectAlias($qb->createFunction('SUM(f.size)'), 'total_size')
+			->from('filecache', 'f')
+			->innerJoin('f', 'storages', 's', $qb->expr()->eq('f.storage', 's.numeric_id'))
+			->where($qb->expr()->eq('f.path', $qb->createNamedParameter('')))
+			->andWhere(
+				$qb->expr()->orX(
+					$qb->expr()->like('s.id', $qb->createNamedParameter(MetricsConfig::STORAGE_HOME_PATTERN, IQueryBuilder::PARAM_STR)),
+					$qb->expr()->like('s.id', $qb->createNamedParameter(MetricsConfig::STORAGE_OBJECT_USER_PATTERN, IQueryBuilder::PARAM_STR)),
+					$qb->expr()->like('s.id', $qb->createNamedParameter(MetricsConfig::STORAGE_LOCAL_PATTERN, IQueryBuilder::PARAM_STR)),
+					$qb->expr()->like('s.id', $qb->createNamedParameter(MetricsConfig::STORAGE_OBJECT_AMAZON_PATTERN, IQueryBuilder::PARAM_STR))
+				)
+			);
 		$result = $qb->executeQuery();
 		$row = $result->fetch();
 		$result->closeCursor();
