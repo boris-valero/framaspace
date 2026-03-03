@@ -48,7 +48,7 @@ class Filecache {
 	}
 
 	/**
-	 * @return array<int, array{username: string, size_bytes: int}>
+	 * @return list<array{username: string, size_bytes: int}>
 	 */
 	public function getTopStorageUsers(): array {
 		$qb = $this->connection->getQueryBuilder();
@@ -81,7 +81,7 @@ class Filecache {
 	}
 
 	/**
-	 * @return array<int, array{filename: string, size_bytes: int, path: string, owner: string}>
+	 * @return list<array{filename: string, size_bytes: int, path: string, owner: string}>
 	 */
 	public function getTopBiggestFiles(): array {
 		$qb = $this->connection->getQueryBuilder();
@@ -122,7 +122,7 @@ class Filecache {
 	}
 
 	/**
-	 * @return array<int, array{username: string, files_count: int, trash_bytes: int}>
+	 * @return list<array{username: string, files_count: int, trash_bytes: int}>
 	 */
 	public function getTopTrashByUser(): array {
 		$qb = $this->connection->getQueryBuilder();
