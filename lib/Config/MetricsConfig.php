@@ -14,7 +14,7 @@ class MetricsConfig {
 	public const STORAGE_LOCAL_PATTERN = 'local::%';
 	public const STORAGE_OBJECT_AMAZON_PATTERN = 'object::store:amazon:::%';
 	public const STORAGE_FILES_PATH_PATTERN = 'files/%';
-	public const STORAGE_VERSIONS_PATH_PATTERN = 'files_versions/%';
+	public const STORAGE_VERSIONS_PATH_PATTERN = 'files_versions';
 	public const STORAGE_TRASHBIN_PATH_PATTERN = 'files_trashbin/%';
 
 	public const MIMETYPE_FOLDER = 2;
