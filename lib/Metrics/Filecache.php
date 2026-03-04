@@ -83,7 +83,7 @@ class Filecache {
 		$users = [];
 		foreach ($rows as $row) {
 			$users[] = [
-				'username' => preg_replace('/^home::/', '', (string)$row['id']) ?? '',
+				'username' => preg_replace('/^(?:home|object::user)::/', '', (string)$row['id']) ?? '',
 				'size_bytes' => (int)($row['total_size'] ?? 0),
 			];
 		}
@@ -114,7 +114,7 @@ class Filecache {
 				'filename' => (string)($row['name'] ?? ''),
 				'size_bytes' => (int)($row['size'] ?? 0),
 				'path' => (string)($row['path'] ?? ''),
-				'owner' => preg_replace('/^home::/', '', (string)$row['id']) ?? '',
+				'owner' => preg_replace('/^(?:home|object::user)::/', '', (string)$row['id']) ?? '',
 			];
 		}
 		return $files;
@@ -157,7 +157,7 @@ class Filecache {
 		$users = [];
 		foreach ($rows as $row) {
 			$users[] = [
-				'username' => preg_replace('/^home::/', '', (string)$row['id']) ?? '',
+				'username' => preg_replace('/^(?:home|object::user)::/', '', (string)$row['id']) ?? '',
 				'files_count' => (int)($row['files_count'] ?? 0),
 				'trash_bytes' => (int)($row['total_size'] ?? 0),
 			];
