@@ -4,29 +4,16 @@ declare(strict_types=1);
 
 namespace OCA\FramaSpace\Metrics;
 
-use OCP\IDBConnection;
+use OCP\DB\QueryBuilder\IQueryBuilder;
 
 /**
  * @psalm-suppress PossiblyUnusedMethod, MixedAssignment, MixedArrayAccess
  */
-class Chats {
-	/**
-	 * @psalm-suppress PossiblyUnusedMethod
-	 */
-	public function __construct(
-		private IDBConnection $db,
-	) {
-	}
-
+class Chats extends BaseMetrics {
 	public function countChats(): int {
-		$qb = $this->db->getQueryBuilder();
-		$qb->selectAlias($qb->createFunction('COUNT(*)'), 'chat_count')
-			->from('comments')
-			->where($qb->expr()->eq('object_type', $qb->createNamedParameter('chat')));
-		$result = $qb->executeQuery();
-		$row = $result->fetch();
-		$result->closeCursor();
-		return (int)$row['chat_count'];
+		return $this->executeCount('comments', 'chat_count', function (IQueryBuilder $qb) {
+			$qb->where($qb->expr()->eq('object_type', $qb->createNamedParameter('chat')));
+		});
 	}
 
 	public function getMetrics(): array {

@@ -4,38 +4,16 @@ declare(strict_types=1);
 
 namespace OCA\FramaSpace\Metrics;
 
-use OCP\IDBConnection;
-
 /**
  * @psalm-suppress PossiblyUnusedMethod, MixedAssignment, MixedArrayAccess
  */
-class Collectives {
-	/**
-	 * @psalm-suppress PossiblyUnusedMethod
-	 */
-	public function __construct(
-		private IDBConnection $db,
-	) {
-	}
-
+class Collectives extends BaseMetrics {
 	public function collectivesNumber(): int {
-		$qb = $this->db->getQueryBuilder();
-		$qb->selectAlias($qb->createFunction('COUNT(*)'), 'collectives_number')
-			->from('collectives');
-		$result = $qb->executeQuery();
-		$row = $result->fetch();
-		$result->closeCursor();
-		return (int)$row['collectives_number'];
+		return $this->executeCount('collectives', 'collectives_number');
 	}
 
 	public function collectivesPages(): int {
-		$qb = $this->db->getQueryBuilder();
-		$qb->selectAlias($qb->createFunction('COUNT(*)'), 'page_count')
-			->from('collectives_pages');
-		$result = $qb->executeQuery();
-		$row = $result->fetch();
-		$result->closeCursor();
-		return (int)$row['page_count'];
+		return $this->executeCount('collectives_pages', 'page_count');
 	}
 
 	public function getMetrics(): array {

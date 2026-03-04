@@ -4,48 +4,20 @@ declare(strict_types=1);
 
 namespace OCA\FramaSpace\Metrics;
 
-use OCP\IDBConnection;
-
 /**
  * @psalm-suppress PossiblyUnusedMethod, MixedAssignment, MixedArrayAccess
  */
-class Deck {
-	/**
-	 * @psalm-suppress PossiblyUnusedMethod
-	 */
-	public function __construct(
-		private IDBConnection $db,
-	) {
-	}
-
+class Deck extends BaseMetrics {
 	public function countCards(): int {
-		$qb = $this->db->getQueryBuilder();
-		$qb->selectAlias($qb->createFunction('COUNT(*)'), 'card_count')
-			->from('deck_cards');
-		$result = $qb->executeQuery();
-		$row = $result->fetch();
-		$result->closeCursor();
-		return (int)$row['card_count'];
+		return $this->executeCount('deck_cards', 'card_count');
 	}
 
 	public function countBoards(): int {
-		$qb = $this->db->getQueryBuilder();
-		$qb->selectAlias($qb->createFunction('COUNT(*)'), 'board_count')
-			->from('deck_boards');
-		$result = $qb->executeQuery();
-		$row = $result->fetch();
-		$result->closeCursor();
-		return (int)$row['board_count'];
+		return $this->executeCount('deck_boards', 'board_count');
 	}
 
 	public function countStacks(): int {
-		$qb = $this->db->getQueryBuilder();
-		$qb->selectAlias($qb->createFunction('COUNT(*)'), 'stack_count')
-			->from('deck_stacks');
-		$result = $qb->executeQuery();
-		$row = $result->fetch();
-		$result->closeCursor();
-		return (int)$row['stack_count'];
+		return $this->executeCount('deck_stacks', 'stack_count');
 	}
 
 	public function getMetrics(): array {

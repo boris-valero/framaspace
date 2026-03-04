@@ -4,38 +4,16 @@ declare(strict_types=1);
 
 namespace OCA\FramaSpace\Metrics;
 
-use OCP\IDBConnection;
-
 /**
  * @psalm-suppress PossiblyUnusedMethod, MixedAssignment, MixedArrayAccess
  */
-class Tables {
-	/**
-	 * @psalm-suppress PossiblyUnusedMethod
-	 */
-	public function __construct(
-		private IDBConnection $db,
-	) {
-	}
-
+class Tables extends BaseMetrics {
 	public function countTables(): int {
-		$qb = $this->db->getQueryBuilder();
-		$qb->selectAlias($qb->createFunction('COUNT(*)'), 'table_count')
-			->from('tables_tables');
-		$result = $qb->executeQuery();
-		$row = $result->fetch();
-		$result->closeCursor();
-		return (int)$row['table_count'];
+		return $this->executeCount('tables_tables', 'table_count');
 	}
 
 	public function countRows(): int {
-		$qb = $this->db->getQueryBuilder();
-		$qb->selectAlias($qb->createFunction('COUNT(*)'), 'row_count')
-			->from('tables_rows');
-		$result = $qb->executeQuery();
-		$row = $result->fetch();
-		$result->closeCursor();
-		return (int)$row['row_count'];
+		return $this->executeCount('tables_rows', 'row_count');
 	}
 
 	public function getMetrics(): array {
