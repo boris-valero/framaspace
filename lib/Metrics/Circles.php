@@ -8,13 +8,13 @@ namespace OCA\FramaSpace\Metrics;
  * @psalm-suppress PossiblyUnusedMethod, MixedAssignment, MixedArrayAccess
  */
 class Circles extends BaseMetrics {
-	public function circlesCount(): int {
+	public function countCircles(): int {
 		return $this->executeCount('circles_circle', 'circle_count');
 	}
 
 	public function getMetrics(): array {
 		return [
-			'circles' => $this->circlesCount()
+			'circles' => $this->countCircles()
 		];
 	}
 }
