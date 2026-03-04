@@ -47,6 +47,16 @@ abstract class BaseMetrics {
 	}
 
 	/**
+	 * Extract username from storage identifier
+	 *
+	 * @param string $storageId The storage identifier (e.g., 'home::user' or 'object::user:user')
+	 * @return string The extracted username
+	 */
+	public static function extractUsername(string $storageId): string {
+		return preg_replace('/^(?:home|object::user)::/', '', $storageId) ?? '';
+	}
+
+	/**
 	 * Get all metrics for this feature
 	 *
 	 * @return array The metrics array
