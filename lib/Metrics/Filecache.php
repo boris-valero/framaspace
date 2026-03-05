@@ -11,21 +11,13 @@ use OCP\IDBConnection;
 /**
  * @psalm-suppress PossiblyUnusedMethod, MixedAssignment, MixedArrayAccess
  */
-class Filecache {
-	/**
-	 * @psalm-suppress PossiblyUnusedMethod
-	 */
-	private IDBConnection $connection;
-
-	/**
-	 * @psalm-suppress PossiblyUnusedMethod
-	 */
+class Filecache extends BaseMetrics {
 	public function __construct(IDBConnection $connection) {
-		$this->connection = $connection;
+		parent::__construct($connection);
 	}
 
 	public function getTotalStorageSize(): int {
-		$qb = $this->connection->getQueryBuilder();
+		$qb = $this->db->getQueryBuilder();
 		$qb->selectAlias($qb->createFunction('SUM(f.size)'), 'total_size')
 			->from('filecache', 'f')
 			->innerJoin('f', 'storages', 's', $qb->expr()->eq('f.storage', 's.numeric_id'))
@@ -45,7 +37,7 @@ class Filecache {
 	}
 
 	public function countFiles(): int {
-		$qb = $this->connection->getQueryBuilder();
+		$qb = $this->db->getQueryBuilder();
 		$qb->selectAlias($qb->createFunction('COUNT(*)'), 'file_count')
 			->from('filecache', 'f')
 			->innerJoin('f', 'mimetypes', 'm', $qb->expr()->eq('f.mimetype', 'm.id'))
@@ -60,7 +52,7 @@ class Filecache {
 	 * @return list<array{username: string, size_bytes: int}>
 	 */
 	public function getTopStorageUsers(): array {
-		$qb = $this->connection->getQueryBuilder();
+		$qb = $this->db->getQueryBuilder();
 
 		$qb->select('s.id')
 			->selectAlias(
@@ -94,7 +86,7 @@ class Filecache {
 	 * @return list<array{filename: string, size_bytes: int, path: string, owner: string}>
 	 */
 	public function getTopBiggestFiles(): array {
-		$qb = $this->connection->getQueryBuilder();
+		$qb = $this->db->getQueryBuilder();
 		$qb->select('f.name', 'f.size', 'f.path', 's.id')
 			->from('filecache', 'f')
 			->innerJoin('f', 'storages', 's', $qb->expr()->eq('f.storage', 's.numeric_id'))
@@ -121,7 +113,7 @@ class Filecache {
 	}
 
 	public function getTotalVersionsStorage(): int {
-		$qb = $this->connection->getQueryBuilder();
+		$qb = $this->db->getQueryBuilder();
 		$qb->selectAlias($qb->func()->sum('f.size'), 'total_size')
 			->from('filecache', 'f')
 			->innerJoin('f', 'mimetypes', 'm', $qb->expr()->eq('f.mimetype', 'm.id'))
@@ -137,7 +129,7 @@ class Filecache {
 	 * @return list<array{username: string, files_count: int, trash_bytes: int}>
 	 */
 	public function getTopTrashByUser(): array {
-		$qb = $this->connection->getQueryBuilder();
+		$qb = $this->db->getQueryBuilder();
 		$qb->select('s.id')
 			->selectAlias($qb->func()->count('f.fileid'), 'files_count')
 			->selectAlias($qb->func()->sum('f.size'), 'total_size')
