@@ -11,9 +11,6 @@ use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\RedirectResponse;
 
-/**
- * @psalm-suppress UnusedClass
- */
 class PageController extends Controller {
 	#[NoCSRFRequired]
 	#[NoAdminRequired]
