@@ -35,9 +35,7 @@ class Filecache extends BaseMetrics {
 					$qb->expr()->like('s.id', $qb->createNamedParameter(MetricsConfig::STORAGE_OBJECT_AMAZON_PATTERN, IQueryBuilder::PARAM_STR))
 				)
 			);
-		$result = $qb->executeQuery();
-		$row = $result->fetch();
-		$result->closeCursor();
+		$row = $this->executeFetchOne($qb);
 		return (int)($row['total_size'] ?? 0);
 	}
 
@@ -49,9 +47,7 @@ class Filecache extends BaseMetrics {
 		$this->joinMimetypes($qb);
 
 		$qb->where($qb->expr()->neq('m.mimetype', $qb->createNamedParameter('httpd/unix-directory')));
-		$result = $qb->executeQuery();
-		$row = $result->fetch();
-		$result->closeCursor();
+		$row = $this->executeFetchOne($qb);
 		return (int)($row['file_count'] ?? 0);
 	}
 
@@ -78,9 +74,7 @@ class Filecache extends BaseMetrics {
 			->orderBy('total_size', 'DESC')
 			->setMaxResults(MetricsConfig::N_TOP_STORAGE_USERS);
 
-		$result = $qb->executeQuery();
-		$rows = $result->fetchAll();
-		$result->closeCursor();
+		$rows = $this->executeFetchAll($qb);
 		$users = [];
 		foreach ($rows as $row) {
 			$users[] = [
@@ -108,9 +102,7 @@ class Filecache extends BaseMetrics {
 			->orderBy('f.size', 'DESC')
 			->setMaxResults(MetricsConfig::N_TOP_BIGGEST_FILES);
 
-		$result = $qb->executeQuery();
-		$rows = $result->fetchAll();
-		$result->closeCursor();
+		$rows = $this->executeFetchAll($qb);
 		$files = [];
 		foreach ($rows as $row) {
 			$files[] = [
@@ -132,9 +124,7 @@ class Filecache extends BaseMetrics {
 
 		$qb->where($qb->expr()->neq('m.mimetype', $qb->createNamedParameter('httpd/unix-directory')))
 			->andWhere($qb->expr()->like('f.path', $qb->createNamedParameter(MetricsConfig::STORAGE_VERSIONS_PATH_PATTERN, IQueryBuilder::PARAM_STR)));
-		$result = $qb->executeQuery();
-		$totalSize = (int)($result->fetchOne() ?? 0);
-		$result->closeCursor();
+		$totalSize = (int)($this->executeFetchScalar($qb) ?? 0);
 		return $totalSize;
 	}
 
@@ -158,9 +148,7 @@ class Filecache extends BaseMetrics {
 			->orderBy('total_size', 'DESC')
 			->setMaxResults(MetricsConfig::N_TOP_TRASH_USERS);
 
-		$result = $qb->executeQuery();
-		$rows = $result->fetchAll();
-		$result->closeCursor();
+		$rows = $this->executeFetchAll($qb);
 		$users = [];
 		foreach ($rows as $row) {
 			$users[] = [

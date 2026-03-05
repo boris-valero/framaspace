@@ -77,6 +77,51 @@ abstract class BaseMetrics {
 	}
 
 	/**
+	 * Execute query and fetch single row result
+	 *
+	 * @param IQueryBuilder $qb The query builder
+	 * @return array<string, mixed>|false The fetched row or false
+	 * @psalm-suppress MixedReturnStatement, MixedInferredReturnType
+	 */
+	protected function executeFetchOne(IQueryBuilder $qb): array|false {
+		$result = $qb->executeQuery();
+		/** @psalm-suppress MixedAssignment */
+		$row = $result->fetch();
+		$result->closeCursor();
+		return $row;
+	}
+
+	/**
+	 * Execute query and fetch all rows result
+	 *
+	 * @param IQueryBuilder $qb The query builder
+	 * @return array The fetched rows
+	 * @psalm-suppress MixedReturnStatement, MixedInferredReturnType
+	 */
+	protected function executeFetchAll(IQueryBuilder $qb): array {
+		$result = $qb->executeQuery();
+		/** @psalm-suppress MixedAssignment */
+		$rows = $result->fetchAll();
+		$result->closeCursor();
+		return $rows;
+	}
+
+	/**
+	 * Execute query and fetch scalar (single value) result
+	 *
+	 * @param IQueryBuilder $qb The query builder
+	 * @return mixed The fetched scalar value
+	 * @psalm-suppress MixedReturnStatement, MixedInferredReturnType
+	 */
+	protected function executeFetchScalar(IQueryBuilder $qb): mixed {
+		$result = $qb->executeQuery();
+		/** @psalm-suppress MixedAssignment */
+		$value = $result->fetchOne();
+		$result->closeCursor();
+		return $value;
+	}
+
+	/**
 	 * Get all metrics for this feature
 	 *
 	 * @return array The metrics array
