@@ -26,15 +26,10 @@ class Filecache extends BaseMetrics {
 
 		$this->joinStorages($qb);
 
-		$qb->where($qb->expr()->eq('f.path', $qb->createNamedParameter('')))
-			->andWhere(
-				$qb->expr()->orX(
-					$qb->expr()->like('s.id', $qb->createNamedParameter(MetricsConfig::STORAGE_HOME_PATTERN, IQueryBuilder::PARAM_STR)),
-					$qb->expr()->like('s.id', $qb->createNamedParameter(MetricsConfig::STORAGE_OBJECT_USER_PATTERN, IQueryBuilder::PARAM_STR)),
-					$qb->expr()->like('s.id', $qb->createNamedParameter(MetricsConfig::STORAGE_LOCAL_PATTERN, IQueryBuilder::PARAM_STR)),
-					$qb->expr()->like('s.id', $qb->createNamedParameter(MetricsConfig::STORAGE_OBJECT_AMAZON_PATTERN, IQueryBuilder::PARAM_STR))
-				)
-			);
+		$qb->where($qb->expr()->eq('f.path', $qb->createNamedParameter('')));
+
+		$this->applyStoragePatternFilter($qb);
+
 		$row = $this->executeFetchOne($qb);
 		return (int)($row['total_size'] ?? 0);
 	}

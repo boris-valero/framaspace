@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace OCA\FramaSpace\Metrics;
 
+use OCA\FramaSpace\Config\MetricsConfig;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 
@@ -119,6 +120,28 @@ abstract class BaseMetrics {
 		$value = $result->fetchOne();
 		$result->closeCursor();
 		return $value;
+	}
+
+	/**
+	 * Apply storage pattern filter to query (home, object::user, local, amazon)
+	 *
+	 * @param IQueryBuilder $qb The query builder
+	 * @return void
+	 */
+	protected function applyStoragePatternFilter(IQueryBuilder $qb): void {
+		$patterns = [
+			MetricsConfig::STORAGE_HOME_PATTERN,
+			MetricsConfig::STORAGE_OBJECT_USER_PATTERN,
+			MetricsConfig::STORAGE_LOCAL_PATTERN,
+			MetricsConfig::STORAGE_OBJECT_AMAZON_PATTERN,
+		];
+
+		$conditions = [];
+		foreach ($patterns as $pattern) {
+			$conditions[] = $qb->expr()->like('s.id', $qb->createNamedParameter($pattern, IQueryBuilder::PARAM_STR));
+		}
+
+		$qb->andWhere($qb->expr()->orX(...$conditions));
 	}
 
 	/**
