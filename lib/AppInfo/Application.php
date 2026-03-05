@@ -13,7 +13,6 @@ use OCP\AppFramework\Http\Events\BeforeTemplateRenderedEvent;
 
 class Application extends App implements IBootstrap {
 	public const APP_ID = 'framaspace';
-
 	/**
 	 * @psalm-suppress PossiblyUnusedMethod
 	 */
@@ -26,6 +25,5 @@ class Application extends App implements IBootstrap {
 	}
 
 	public function boot(IBootContext $context): void {
-		// Optionnel: place tes hooks, etc ici !
 	}
 }
