@@ -34,7 +34,7 @@ abstract class BaseMetrics {
 		?callable $addWhere = null,
 	): int {
 		$qb = $this->db->getQueryBuilder();
-		$qb->selectAlias($qb->createFunction('COUNT(*)'), $countAlias)
+		$qb->select($qb->func()->count($countAlias))
 			->from($table);
 
 		if ($addWhere !== null) {
@@ -42,9 +42,10 @@ abstract class BaseMetrics {
 		}
 
 		$result = $qb->executeQuery();
-		$row = $result->fetch();
+		/** @var false|int */
+		$row = $result->fetchOne();
 		$result->closeCursor();
-		return (int)($row[$countAlias] ?? 0);
+		return ($row === false ? 0 : $row);
 	}
 
 	/**
@@ -81,15 +82,14 @@ abstract class BaseMetrics {
 	 * Execute query and fetch single row result
 	 *
 	 * @param IQueryBuilder $qb The query builder
-	 * @return array<string, mixed>|false The fetched row or false
-	 * @psalm-suppress MixedReturnStatement, MixedInferredReturnType
+	 * @return int The fetched row value or 0 if no result
 	 */
-	protected function executeFetchOne(IQueryBuilder $qb): array|false {
+	protected function executeFetchOne(IQueryBuilder $qb): int {
 		$result = $qb->executeQuery();
-		/** @psalm-suppress MixedAssignment */
-		$row = $result->fetch();
+		/** @var false|int|null */
+		$row = $result->fetchOne();
 		$result->closeCursor();
-		return $row;
+		return ($row === false || $row === null ? 0 : $row);
 	}
 
 	/**
@@ -105,21 +105,6 @@ abstract class BaseMetrics {
 		$rows = $result->fetchAll();
 		$result->closeCursor();
 		return $rows;
-	}
-
-	/**
-	 * Execute query and fetch scalar (single value) result
-	 *
-	 * @param IQueryBuilder $qb The query builder
-	 * @return mixed The fetched scalar value
-	 * @psalm-suppress MixedReturnStatement, MixedInferredReturnType
-	 */
-	protected function executeFetchScalar(IQueryBuilder $qb): mixed {
-		$result = $qb->executeQuery();
-		/** @psalm-suppress MixedAssignment */
-		$value = $result->fetchOne();
-		$result->closeCursor();
-		return $value;
 	}
 
 	/**

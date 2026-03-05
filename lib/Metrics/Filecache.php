@@ -21,7 +21,7 @@ class Filecache extends BaseMetrics {
 
 	public function getTotalStorageSize(): int {
 		$qb = $this->db->getQueryBuilder();
-		$qb->selectAlias($qb->createFunction('SUM(f.size)'), 'total_size')
+		$qb->select($qb->func()->sum('f.size'))
 			->from('filecache', 'f');
 
 		$this->joinStorages($qb);
@@ -30,20 +30,18 @@ class Filecache extends BaseMetrics {
 
 		$this->applyStoragePatternFilter($qb);
 
-		$row = $this->executeFetchOne($qb);
-		return (int)($row['total_size'] ?? 0);
+		return $this->executeFetchOne($qb);
 	}
 
 	public function countFiles(): int {
 		$qb = $this->db->getQueryBuilder();
-		$qb->selectAlias($qb->createFunction('COUNT(*)'), 'file_count')
+		$qb->select($qb->func()->count('*'))
 			->from('filecache', 'f');
 
 		$this->joinMimetypes($qb);
 
 		$qb->where($qb->expr()->neq('m.mimetype', $qb->createNamedParameter('httpd/unix-directory')));
-		$row = $this->executeFetchOne($qb);
-		return (int)($row['file_count'] ?? 0);
+		return $this->executeFetchOne($qb);
 	}
 
 	/**
@@ -69,12 +67,13 @@ class Filecache extends BaseMetrics {
 			->orderBy('total_size', 'DESC')
 			->setMaxResults(MetricsConfig::N_TOP_STORAGE_USERS);
 
+		/** @var list<array{id: string, total_size: int}> */
 		$rows = $this->executeFetchAll($qb);
 		$users = [];
 		foreach ($rows as $row) {
 			$users[] = [
-				'username' => BaseMetrics::extractUsername((string)$row['id']),
-				'size_bytes' => (int)($row['total_size'] ?? 0),
+				'username' => BaseMetrics::extractUsername($row['id']),
+				'size_bytes' => ($row['total_size'] ?? 0),
 			];
 		}
 		return $users;
@@ -97,14 +96,15 @@ class Filecache extends BaseMetrics {
 			->orderBy('f.size', 'DESC')
 			->setMaxResults(MetricsConfig::N_TOP_BIGGEST_FILES);
 
+		/** @var list<array{name: string, size: int, path: string, id: string}> */
 		$rows = $this->executeFetchAll($qb);
 		$files = [];
 		foreach ($rows as $row) {
 			$files[] = [
-				'filename' => (string)($row['name'] ?? ''),
-				'size_bytes' => (int)($row['size'] ?? 0),
-				'path' => (string)($row['path'] ?? ''),
-				'owner' => BaseMetrics::extractUsername((string)$row['id']),
+				'filename' => ($row['name'] ?? ''),
+				'size_bytes' => ($row['size'] ?? 0),
+				'path' => ($row['path'] ?? ''),
+				'owner' => BaseMetrics::extractUsername($row['id']),
 			];
 		}
 		return $files;
@@ -112,15 +112,14 @@ class Filecache extends BaseMetrics {
 
 	public function getTotalVersionsStorage(): int {
 		$qb = $this->db->getQueryBuilder();
-		$qb->selectAlias($qb->func()->sum('f.size'), 'total_size')
+		$qb->select($qb->func()->sum('f.size'))
 			->from('filecache', 'f');
 
 		$this->joinMimetypes($qb);
 
 		$qb->where($qb->expr()->neq('m.mimetype', $qb->createNamedParameter('httpd/unix-directory')))
 			->andWhere($qb->expr()->like('f.path', $qb->createNamedParameter(MetricsConfig::STORAGE_VERSIONS_PATH_PATTERN, IQueryBuilder::PARAM_STR)));
-		$totalSize = (int)($this->executeFetchScalar($qb) ?? 0);
-		return $totalSize;
+		return $this->executeFetchOne($qb);
 	}
 
 	/**
@@ -143,13 +142,14 @@ class Filecache extends BaseMetrics {
 			->orderBy('total_size', 'DESC')
 			->setMaxResults(MetricsConfig::N_TOP_TRASH_USERS);
 
+		/** @var list<array{files_count: int, total_size: int, id: string}> */
 		$rows = $this->executeFetchAll($qb);
 		$users = [];
 		foreach ($rows as $row) {
 			$users[] = [
-				'username' => BaseMetrics::extractUsername((string)$row['id']),
-				'files_count' => (int)($row['files_count'] ?? 0),
-				'trash_bytes' => (int)($row['total_size'] ?? 0),
+				'username' => BaseMetrics::extractUsername($row['id']),
+				'files_count' => ($row['files_count'] ?? 0),
+				'trash_bytes' => ($row['total_size'] ?? 0),
 			];
 		}
 		return $users;
@@ -159,10 +159,10 @@ class Filecache extends BaseMetrics {
 		return [
 			'storage' => $this->getTotalStorageSize(),
 			'files' => $this->countFiles(),
-			'top5users' => $this->getTopStorageUsers(),
-			'top10biggestfiles' => $this->getTopBiggestFiles(),
-			'version_storage' => $this->getTotalVersionsStorage(),
-			'top3biggesttrash' => $this->getTopTrashByUser(),
+			'topUsers' => $this->getTopStorageUsers(),
+			'topBiggestFiles' => $this->getTopBiggestFiles(),
+			'versionsStorage' => $this->getTotalVersionsStorage(),
+			'topBiggestTrash' => $this->getTopTrashByUser(),
 		];
 	}
 }
