@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace OCA\FramaSpace\Metrics;
 
-/**
- * @psalm-suppress PossiblyUnusedMethod, MixedAssignment, MixedArrayAccess
- */
 class Tables extends BaseMetrics {
 	public function countTables(): int {
 		return $this->executeCount('tables_tables', 'table_count');

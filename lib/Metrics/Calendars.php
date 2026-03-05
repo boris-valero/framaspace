@@ -6,9 +6,6 @@ namespace OCA\FramaSpace\Metrics;
 
 use OCP\DB\QueryBuilder\IQueryBuilder;
 
-/**
- * @psalm-suppress PossiblyUnusedMethod, MixedAssignment, MixedArrayAccess
- */
 class Calendars extends BaseMetrics {
 	public function countCalendars(): int {
 		return $this->executeCount('calendars', 'calendar_count');

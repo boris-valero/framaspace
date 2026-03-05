@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace OCA\FramaSpace\Metrics;
 
-/**
- * @psalm-suppress PossiblyUnusedMethod, MixedAssignment, MixedArrayAccess
- */
 class Deck extends BaseMetrics {
 	public function countCards(): int {
 		return $this->executeCount('deck_cards', 'card_count');

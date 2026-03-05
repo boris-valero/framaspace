@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace OCA\FramaSpace\Metrics;
 
-/**
- * @psalm-suppress PossiblyUnusedMethod, MixedAssignment, MixedArrayAccess
- */
 class Forms extends BaseMetrics {
 	public function countForms(): int {
 		return $this->executeCount('forms_v2_forms', 'form_count');

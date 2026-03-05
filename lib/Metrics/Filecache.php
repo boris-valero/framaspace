@@ -8,13 +8,7 @@ use OCA\FramaSpace\Config\MetricsConfig;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 
-/**
- * @psalm-suppress MixedAssignment, MixedArrayAccess
- */
 class Filecache extends BaseMetrics {
-	/**
-	 * @psalm-suppress PossiblyUnusedMethod
-	 */
 	public function __construct(IDBConnection $connection) {
 		parent::__construct($connection);
 	}

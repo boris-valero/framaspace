@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace OCA\FramaSpace\Metrics;
 
-/**
- * @psalm-suppress PossiblyUnusedMethod, MixedAssignment, MixedArrayAccess
- */
 class Collectives extends BaseMetrics {
 	public function countCollectives(): int {
 		return $this->executeCount('collectives', 'collectives_number');

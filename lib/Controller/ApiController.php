@@ -10,9 +10,6 @@ use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\OCSController;
 
-/**
- * @psalm-suppress UnusedClass
- */
 class ApiController extends OCSController {
 	/**
 	 * An example API endpoint

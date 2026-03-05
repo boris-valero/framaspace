@@ -8,13 +8,7 @@ use OCA\FramaSpace\Config\MetricsConfig;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 
-/**
- * @psalm-suppress PossiblyUnusedMethod, MixedAssignment, MixedArrayAccess
- */
 abstract class BaseMetrics {
-	/**
-	 * @psalm-suppress PossiblyUnusedMethod
-	 */
 	public function __construct(
 		protected IDBConnection $db,
 	) {
@@ -97,11 +91,9 @@ abstract class BaseMetrics {
 	 *
 	 * @param IQueryBuilder $qb The query builder
 	 * @return array The fetched rows
-	 * @psalm-suppress MixedReturnStatement, MixedInferredReturnType
 	 */
 	protected function executeFetchAll(IQueryBuilder $qb): array {
 		$result = $qb->executeQuery();
-		/** @psalm-suppress MixedAssignment */
 		$rows = $result->fetchAll();
 		$result->closeCursor();
 		return $rows;

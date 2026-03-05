@@ -19,10 +19,6 @@ use OCP\AppFramework\OCSController;
 use OCP\ICacheFactory;
 use OCP\IRequest;
 
-/**
- * @psalm-suppress UnusedClass
- */
-
 class StatsController extends OCSController {
 	private const CACHE_TTL_SECONDS = 6 * 3600;
 	private const CACHE_NAMESPACE = 'framaspace-stats';

@@ -6,9 +6,6 @@ namespace OCA\FramaSpace\Metrics;
 
 use OCP\DB\QueryBuilder\IQueryBuilder;
 
-/**
- * @psalm-suppress PossiblyUnusedMethod, MixedAssignment, MixedArrayAccess
- */
 class Chats extends BaseMetrics {
 	public function countChats(): int {
 		return $this->executeCount('comments', 'chat_count', function (IQueryBuilder $qb) {
