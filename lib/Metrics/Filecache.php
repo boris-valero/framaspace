@@ -9,9 +9,12 @@ use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 
 /**
- * @psalm-suppress PossiblyUnusedMethod, MixedAssignment, MixedArrayAccess
+ * @psalm-suppress MixedAssignment, MixedArrayAccess
  */
 class Filecache extends BaseMetrics {
+	/**
+	 * @psalm-suppress PossiblyUnusedMethod
+	 */
 	public function __construct(IDBConnection $connection) {
 		parent::__construct($connection);
 	}
