@@ -57,6 +57,26 @@ abstract class BaseMetrics {
 	}
 
 	/**
+	 * Join filecache with storages table
+	 *
+	 * @param IQueryBuilder $qb The query builder
+	 * @return void
+	 */
+	protected function joinStorages(IQueryBuilder $qb): void {
+		$qb->innerJoin('f', 'storages', 's', $qb->expr()->eq('f.storage', 's.numeric_id'));
+	}
+
+	/**
+	 * Join filecache with mimetypes table
+	 *
+	 * @param IQueryBuilder $qb The query builder
+	 * @return void
+	 */
+	protected function joinMimetypes(IQueryBuilder $qb): void {
+		$qb->innerJoin('f', 'mimetypes', 'm', $qb->expr()->eq('f.mimetype', 'm.id'));
+	}
+
+	/**
 	 * Get all metrics for this feature
 	 *
 	 * @return array The metrics array

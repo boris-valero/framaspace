@@ -22,9 +22,11 @@ class Filecache extends BaseMetrics {
 	public function getTotalStorageSize(): int {
 		$qb = $this->db->getQueryBuilder();
 		$qb->selectAlias($qb->createFunction('SUM(f.size)'), 'total_size')
-			->from('filecache', 'f')
-			->innerJoin('f', 'storages', 's', $qb->expr()->eq('f.storage', 's.numeric_id'))
-			->where($qb->expr()->eq('f.path', $qb->createNamedParameter('')))
+			->from('filecache', 'f');
+		
+		$this->joinStorages($qb);
+		
+		$qb->where($qb->expr()->eq('f.path', $qb->createNamedParameter('')))
 			->andWhere(
 				$qb->expr()->orX(
 					$qb->expr()->like('s.id', $qb->createNamedParameter(MetricsConfig::STORAGE_HOME_PATTERN, IQueryBuilder::PARAM_STR)),
@@ -42,9 +44,11 @@ class Filecache extends BaseMetrics {
 	public function countFiles(): int {
 		$qb = $this->db->getQueryBuilder();
 		$qb->selectAlias($qb->createFunction('COUNT(*)'), 'file_count')
-			->from('filecache', 'f')
-			->innerJoin('f', 'mimetypes', 'm', $qb->expr()->eq('f.mimetype', 'm.id'))
-			->where($qb->expr()->neq('m.mimetype', $qb->createNamedParameter('httpd/unix-directory')));
+			->from('filecache', 'f');
+		
+		$this->joinMimetypes($qb);
+		
+		$qb->where($qb->expr()->neq('m.mimetype', $qb->createNamedParameter('httpd/unix-directory')));
 		$result = $qb->executeQuery();
 		$row = $result->fetch();
 		$result->closeCursor();
@@ -62,10 +66,12 @@ class Filecache extends BaseMetrics {
 				$qb->func()->sum('f.size'),
 				'total_size'
 			)
-			->from('filecache', 'f')
-			->innerJoin('f', 'storages', 's', $qb->expr()->eq('f.storage', 's.numeric_id'))
-			->innerJoin('f', 'mimetypes', 'm', $qb->expr()->eq('f.mimetype', 'm.id'))
-			->where($qb->expr()->like('s.id', $qb->createNamedParameter(MetricsConfig::STORAGE_HOME_PATTERN, IQueryBuilder::PARAM_STR)))
+			->from('filecache', 'f');
+		
+		$this->joinStorages($qb);
+		$this->joinMimetypes($qb);
+		
+		$qb->where($qb->expr()->like('s.id', $qb->createNamedParameter(MetricsConfig::STORAGE_HOME_PATTERN, IQueryBuilder::PARAM_STR)))
 			->andWhere($qb->expr()->neq('m.mimetype', $qb->createNamedParameter('httpd/unix-directory')))
 			->andWhere($qb->expr()->like('f.path', $qb->createNamedParameter(MetricsConfig::STORAGE_FILES_PATH_PATTERN, IQueryBuilder::PARAM_STR)))
 			->groupBy('s.id')
@@ -91,10 +97,12 @@ class Filecache extends BaseMetrics {
 	public function getTopBiggestFiles(): array {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('f.name', 'f.size', 'f.path', 's.id')
-			->from('filecache', 'f')
-			->innerJoin('f', 'storages', 's', $qb->expr()->eq('f.storage', 's.numeric_id'))
-			->innerJoin('f', 'mimetypes', 'm', $qb->expr()->eq('f.mimetype', 'm.id'))
-			->where($qb->expr()->neq('m.mimetype', $qb->createNamedParameter('httpd/unix-directory')))
+			->from('filecache', 'f');
+		
+		$this->joinStorages($qb);
+		$this->joinMimetypes($qb);
+		
+		$qb->where($qb->expr()->neq('m.mimetype', $qb->createNamedParameter('httpd/unix-directory')))
 			->andWhere($qb->expr()->like('s.id', $qb->createNamedParameter(MetricsConfig::STORAGE_HOME_PATTERN, IQueryBuilder::PARAM_STR)))
 			->andWhere($qb->expr()->like('f.path', $qb->createNamedParameter(MetricsConfig::STORAGE_FILES_PATH_PATTERN, IQueryBuilder::PARAM_STR)))
 			->orderBy('f.size', 'DESC')
@@ -118,9 +126,11 @@ class Filecache extends BaseMetrics {
 	public function getTotalVersionsStorage(): int {
 		$qb = $this->db->getQueryBuilder();
 		$qb->selectAlias($qb->func()->sum('f.size'), 'total_size')
-			->from('filecache', 'f')
-			->innerJoin('f', 'mimetypes', 'm', $qb->expr()->eq('f.mimetype', 'm.id'))
-			->where($qb->expr()->neq('m.mimetype', $qb->createNamedParameter('httpd/unix-directory')))
+			->from('filecache', 'f');
+		
+		$this->joinMimetypes($qb);
+		
+		$qb->where($qb->expr()->neq('m.mimetype', $qb->createNamedParameter('httpd/unix-directory')))
 			->andWhere($qb->expr()->like('f.path', $qb->createNamedParameter(MetricsConfig::STORAGE_VERSIONS_PATH_PATTERN, IQueryBuilder::PARAM_STR)));
 		$result = $qb->executeQuery();
 		$totalSize = (int)($result->fetchOne() ?? 0);
@@ -136,10 +146,12 @@ class Filecache extends BaseMetrics {
 		$qb->select('s.id')
 			->selectAlias($qb->func()->count('f.fileid'), 'files_count')
 			->selectAlias($qb->func()->sum('f.size'), 'total_size')
-			->from('filecache', 'f')
-			->innerJoin('f', 'storages', 's', $qb->expr()->eq('f.storage', 's.numeric_id'))
-			->innerJoin('f', 'mimetypes', 'm', $qb->expr()->eq('f.mimetype', 'm.id'))
-			->where($qb->expr()->like('s.id', $qb->createNamedParameter(MetricsConfig::STORAGE_HOME_PATTERN, IQueryBuilder::PARAM_STR)))
+			->from('filecache', 'f');
+		
+		$this->joinStorages($qb);
+		$this->joinMimetypes($qb);
+		
+		$qb->where($qb->expr()->like('s.id', $qb->createNamedParameter(MetricsConfig::STORAGE_HOME_PATTERN, IQueryBuilder::PARAM_STR)))
 			->andWhere($qb->expr()->neq('m.mimetype', $qb->createNamedParameter('httpd/unix-directory')))
 			->andWhere($qb->expr()->like('f.path', $qb->createNamedParameter(MetricsConfig::STORAGE_TRASHBIN_PATH_PATTERN, IQueryBuilder::PARAM_STR)))
 			->groupBy('s.id')
