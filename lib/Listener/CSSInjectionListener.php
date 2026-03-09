@@ -16,13 +16,12 @@ use OCP\Util;
  */
 class CSSInjectionListener implements IEventListener {
 
-	private IConfig $config;
-
 	/**
 	 * @psalm-suppress PossiblyUnusedMethod
 	 */
-	public function __construct(IConfig $config) {
-		$this->config = $config;
+	public function __construct(
+		private IConfig $config,
+	) {
 	}
 
 	public function handle(Event $event): void {
