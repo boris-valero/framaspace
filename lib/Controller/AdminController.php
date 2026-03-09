@@ -11,8 +11,6 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 
 /**
- * Contrôleur pour les paramètres d'administration
- *
  * @psalm-suppress UnusedClass
  */
 class AdminController extends Controller {
@@ -33,7 +31,6 @@ class AdminController extends Controller {
 			/** @var array<int, mixed> $hiddenApps */
 			$hiddenApps = $hiddenAppsParam;
 		} else {
-			// Sinon, on décode le JSON
 			if (!is_string($hiddenAppsParam)) {
 				return new JSONResponse(['error' => 'Invalid parameter type'], 400);
 			}
@@ -60,7 +57,7 @@ class AdminController extends Controller {
 				$ignoredProtected[$appId] = true;
 				continue;
 			}
-			$filteredApps[$appId] = true; // use keys to dedupe
+			$filteredApps[$appId] = true;
 		}
 
 		$filteredApps = array_keys($filteredApps);

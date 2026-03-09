@@ -5,9 +5,6 @@ namespace OCA\FramaSpace\Service;
 use OCA\FramaSpace\AppInfo\Application;
 use OCP\IAppConfig;
 
-/**
- * Service de proxy pour la configuration de FramaSpace
- */
 class ConfigProxy {
 	/** @psalm-suppress PossiblyUnusedMethod */
 	public function __construct(
