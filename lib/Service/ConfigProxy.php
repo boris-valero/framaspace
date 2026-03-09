@@ -24,7 +24,13 @@ class ConfigProxy {
 	 * @psalm-suppress PossiblyUnusedMethod
 	 */
 	public function getAppValueArray(string $name, string $default = '[]', ?string $appId = null): array {
-		return (array)json_decode($this->getAppValue($name, $default, $appId), true);
+		try {
+			/** @var array<array-key, mixed> $result */
+			$result = json_decode($this->getAppValue($name, $default, $appId), true, 512, JSON_THROW_ON_ERROR);
+			return $result;
+		} catch (\JsonException) {
+			return [];
+		}
 	}
 
 	public function setAppValueArray(string $name, array $value, ?string $appId = null): void {

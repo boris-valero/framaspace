@@ -32,9 +32,13 @@ class CSSInjectionListener implements IEventListener {
 
 		/** @psalm-suppress DeprecatedMethod */
 		$hiddenAppsJson = $this->config->getAppValue(Application::APP_ID, 'hidden_apps', '[]');
-		$decoded = json_decode($hiddenAppsJson, true);
+		try {
+			$decoded = json_decode($hiddenAppsJson, true, 512, JSON_THROW_ON_ERROR);
+		} catch (\JsonException) {
+			return;
+		}
 
-		if ($decoded === null || !is_array($decoded)) {
+		if (!is_array($decoded)) {
 			return;
 		}
 		$hiddenApps = array_filter($decoded, 'is_string');

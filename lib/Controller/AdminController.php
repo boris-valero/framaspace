@@ -34,11 +34,12 @@ class AdminController extends Controller {
 			if (!is_string($hiddenAppsParam)) {
 				return new JSONResponse(['error' => 'Invalid parameter type'], 400);
 			}
-			$decoded = json_decode($hiddenAppsParam, true);
-			if ($decoded === null || !is_array($decoded)) {
+			try {
+				/** @var array<array-key, mixed> $hiddenApps */
+				$hiddenApps = json_decode($hiddenAppsParam, true, 512, JSON_THROW_ON_ERROR);
+			} catch (\JsonException) {
 				return new JSONResponse(['error' => 'Invalid JSON format'], 400);
 			}
-			$hiddenApps = $decoded;
 		}
 
 		/** @var array<string> $validatedApps */
