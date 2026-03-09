@@ -10,16 +10,8 @@ class SimpleAdminControllerTest extends TestCase {
 		$hiddenApps = ['files', 'deck', 'activity', 'photos', 'mail'];
 		$protectedApps = ['files', 'activity'];
 
-		$filteredApps = [];
-		$ignoredProtected = [];
-
-		foreach ($hiddenApps as $appId) {
-			if (in_array($appId, $protectedApps, true)) {
-				$ignoredProtected[] = $appId;
-				continue;
-			}
-			$filteredApps[] = $appId;
-		}
+		$filteredApps = array_values(array_diff($hiddenApps, $protectedApps));
+		$ignoredProtected = array_values(array_intersect($hiddenApps, $protectedApps));
 
 		$this->assertEquals(['deck', 'photos', 'mail'], $filteredApps);
 		$this->assertEquals(['files', 'activity'], $ignoredProtected);
@@ -46,13 +38,7 @@ class SimpleAdminControllerTest extends TestCase {
 
 	public function testStringValidation(): void {
 		$mixedArray = ['deck', 123, 'photos', null, 'mail', false];
-		$validApps = [];
-
-		foreach ($mixedArray as $appId) {
-			if (is_string($appId)) {
-				$validApps[] = $appId;
-			}
-		}
+		$validApps = array_values(array_filter($mixedArray, 'is_string'));
 
 		$this->assertEquals(['deck', 'photos', 'mail'], $validApps);
 		$this->assertCount(3, $validApps);
@@ -65,11 +51,7 @@ class SimpleAdminControllerTest extends TestCase {
 	public function testDuplicateRemoval(): void {
 		$appsWithDuplicates = ['deck', 'photos', 'deck', 'mail', 'photos'];
 
-		$filteredApps = [];
-		foreach ($appsWithDuplicates as $appId) {
-			$filteredApps[$appId] = true;
-		}
-		$uniqueApps = array_keys($filteredApps);
+		$uniqueApps = array_values(array_unique($appsWithDuplicates));
 
 		$this->assertEquals(['deck', 'photos', 'mail'], $uniqueApps);
 		$this->assertCount(3, $uniqueApps);

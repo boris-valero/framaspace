@@ -51,18 +51,8 @@ class AdminController extends Controller {
 			$validatedApps[] = $appId;
 		}
 
-		$filteredApps = [];
-		$ignoredProtected = [];
-		foreach ($validatedApps as $appId) {
-			if (in_array($appId, $protectedApps, true)) {
-				$ignoredProtected[$appId] = true;
-				continue;
-			}
-			$filteredApps[$appId] = true;
-		}
-
-		$filteredApps = array_keys($filteredApps);
-		$ignoredProtected = array_keys($ignoredProtected);
+		$filteredApps = array_diff($validatedApps, $protectedApps);
+		$ignoredProtected = array_intersect($validatedApps, $protectedApps);
 
 		$this->config->setAppValueArray('hidden_apps', $filteredApps);
 
