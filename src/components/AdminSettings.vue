@@ -15,7 +15,7 @@
 							v-model="app.hidden"
 							type="checkbox"
 							:disabled="app.protected"
-							:title="app.protected ? t('framaspace', 'This application cannot be hidden') : ''" />
+							:title="app.protected ? t('framaspace', 'This application cannot be hidden') : ''">
 					</td>
 				</tr>
 			</tbody>
