@@ -29,6 +29,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import axios from '@nextcloud/axios'
 
 const apps = ref([])
 const status = ref('')
@@ -36,9 +37,8 @@ const statusClass = ref('')
 
 onMounted(async () => {
 	try {
-		const response = await fetch('/apps/framaspace/api/admin/apps')
-		if (!response.ok) throw new Error('Erreur serveur')
-		apps.value = await response.json()
+		const response = await axios.get('/apps/framaspace/api/admin/apps')
+		apps.value = response.data
 	} catch (e) {
 		status.value = t('framaspace', 'Loading error')
 		statusClass.value = 'error'
@@ -49,17 +49,9 @@ const save = async () => {
 	status.value = t('framaspace', 'Saving…')
 	statusClass.value = ''
 	try {
-		const response = await fetch('/apps/framaspace/api/admin/hidden', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				requesttoken: (window.OCA && OCA.App && OCA.App.requestToken) ? OCA.App.requestToken : '',
-			},
-			body: JSON.stringify({
-				hidden: apps.value.filter(a => a.hidden).map(a => a.id),
-			}),
+		await axios.post('/apps/framaspace/api/admin/hidden', {
+			hidden: apps.value.filter(a => a.hidden).map(a => a.id),
 		})
-		if (!response.ok) throw new Error('Erreur serveur')
 		status.value = t('framaspace', 'Saved!')
 		statusClass.value = 'success'
 	} catch (e) {
