@@ -29,7 +29,6 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { t } from '@nextcloud/l10n'
 
 const apps = ref([])
 const status = ref('')
