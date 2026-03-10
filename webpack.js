@@ -3,9 +3,7 @@ const ESLintPlugin = require('eslint-webpack-plugin')
 const StyleLintPlugin = require('stylelint-webpack-plugin')
 const path = require('path')
 
-webpackConfig.entry = {
-	main: { import: path.join(__dirname, 'src', 'main.js'), filename: 'main.js' },
-}
+webpackConfig.entry = {}
 
 webpackConfig.plugins.push(
 	new ESLintPlugin({
