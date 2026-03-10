@@ -5,7 +5,6 @@ export default createAppConfig(
   {
     // main: resolve(join("src", "main.js")),
     "admin-settings": resolve(join("src", "admin-settings.js")),
-    "admin-form": resolve(join("src", "admin-form.scss")),
   },
   {
     createEmptyCSSEntryPoints: true,
