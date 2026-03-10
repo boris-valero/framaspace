@@ -60,7 +60,21 @@ class AdminApiController extends Controller {
 	public function setHidden(): DataResponse {
 		$params = $this->request->getParams();
 		$hidden = isset($params['hidden']) ? (array)$params['hidden'] : [];
-		$this->config->setAppValueArray('hidden_apps', $hidden);
-		return new DataResponse(['success' => true]);
+		$protectedApps = ['files', 'activity'];
+
+		// Validate all items are strings
+		$validatedApps = array_values(array_filter($hidden, 'is_string'));
+
+		// Filter out protected apps
+		$filteredApps = array_diff($validatedApps, $protectedApps);
+		$ignoredProtected = array_intersect($validatedApps, $protectedApps);
+
+		$this->config->setAppValueArray('hidden_apps', $filteredApps);
+
+		return new DataResponse([
+			'success' => true,
+			'hidden_apps' => $filteredApps,
+			'ignored_protected_apps' => array_values($ignoredProtected),
+		]);
 	}
 }

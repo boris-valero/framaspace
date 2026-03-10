@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 
-class SimpleAdminControllerTest extends TestCase {
+class HiddenAppsLogicTest extends TestCase {
 
 	public function testFilterProtectedApps(): void {
 		$hiddenApps = ['files', 'deck', 'activity', 'photos', 'mail'];
