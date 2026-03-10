@@ -40,7 +40,7 @@ class CSSInjectionListener implements IEventListener {
 		if (!is_array($decoded)) {
 			return;
 		}
-		$hiddenApps = array_filter($decoded, 'is_string');
+		$hiddenApps = array_filter($decoded, fn ($appId) => is_string($appId) && !empty($appId));
 
 		if (empty($hiddenApps)) {
 			return;
@@ -57,11 +57,8 @@ class CSSInjectionListener implements IEventListener {
 	private function generateHiddenAppsCSS(array $hiddenApps): string {
 		$css = '';
 
+		/** @var string $appId */
 		foreach ($hiddenApps as $appId) {
-			if (!is_string($appId) || empty($appId)) {
-				continue;
-			}
-
 			$css .= ".app-menu-entry:has(a.app-menu-entry__link[href\$=\"/apps/{$appId}/\"]) { display: none; }";
 		}
 
