@@ -10,6 +10,7 @@ use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\IConfig;
 use OCP\Util;
+use Psr\Log\LoggerInterface;
 
 /**
  * @implements IEventListener<BeforeTemplateRenderedEvent>
@@ -21,6 +22,7 @@ class CSSInjectionListener implements IEventListener {
 	 */
 	public function __construct(
 		private IConfig $config,
+		private LoggerInterface $logger,
 	) {
 	}
 
@@ -33,11 +35,13 @@ class CSSInjectionListener implements IEventListener {
 		$hiddenAppsJson = $this->config->getAppValue(Application::APP_ID, 'hidden_apps', '[]');
 		try {
 			$decoded = json_decode($hiddenAppsJson, true, 512, JSON_THROW_ON_ERROR);
-		} catch (\JsonException) {
+		} catch (\JsonException $e) {
+			$this->logger->error('Failed to decode hidden apps configuration', ['exception' => $e]);
 			return;
 		}
 
 		if (!is_array($decoded)) {
+			$this->logger->warning('Hidden apps configuration is not an array');
 			return;
 		}
 		$hiddenApps = array_filter($decoded, fn ($appId) => is_string($appId) && !empty($appId));
