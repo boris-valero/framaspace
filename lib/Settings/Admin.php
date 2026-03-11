@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OCA\FramaSpace\Settings;
 
 use OCA\FramaSpace\AppInfo\Application;
