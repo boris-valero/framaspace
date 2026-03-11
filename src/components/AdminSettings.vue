@@ -23,40 +23,34 @@
 		<button type="submit">
 			{{ t('framaspace', 'Save') }}
 		</button>
-		<span class="save-status" :class="statusClass">{{ status }}</span>
 	</form>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import axios from '@nextcloud/axios'
+import { showSuccess, showError } from '@nextcloud/dialogs'
+import '@nextcloud/dialogs/style.css'
 
 const apps = ref([])
-const status = ref('')
-const statusClass = ref('')
 
 onMounted(async () => {
 	try {
 		const response = await axios.get('/apps/framaspace/api/admin/apps')
 		apps.value = response.data
 	} catch (e) {
-		status.value = t('framaspace', 'Loading error')
-		statusClass.value = 'error'
+		showError(t('framaspace', 'Loading error'))
 	}
 })
 
 const save = async () => {
-	status.value = t('framaspace', 'Saving…')
-	statusClass.value = ''
 	try {
 		await axios.post('/apps/framaspace/api/admin/hidden', {
 			hidden: apps.value.filter(a => a.hidden).map(a => a.id),
 		})
-		status.value = t('framaspace', 'Saved!')
-		statusClass.value = 'success'
+		showSuccess(t('framaspace', 'Saved!'))
 	} catch (e) {
-		status.value = t('framaspace', 'Save error')
-		statusClass.value = 'error'
+		showError(t('framaspace', 'Save error'))
 	}
 }
 </script>
@@ -112,19 +106,6 @@ const save = async () => {
 
 	.form-actions {
 		margin: 20px 0;
-	}
-
-	.save-status {
-		margin-left: 10px;
-		font-weight: bold;
-
-		&.success {
-			color: #28a745;
-		}
-
-		&.error {
-			color: #dc3545;
-		}
 	}
 
 	.info-box {
