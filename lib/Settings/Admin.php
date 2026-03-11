@@ -7,7 +7,7 @@ use OCP\AppFramework\Http\TemplateResponse;
 use OCP\Settings\ISettings;
 
 /**
- * Fournit le panneau d'administration FramaSpace (intégration Vue 3)
+ * Provides the FramaSpace admin panel
  * @psalm-suppress UnusedClass
  */
 class Admin implements ISettings {
