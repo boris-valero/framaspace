@@ -11,11 +11,10 @@
 				<tr v-for="app in apps" :key="app.id">
 					<td>{{ app.name }}</td>
 					<td>
-						<input
+						<NcCheckboxRadioSwitch
 							v-model="app.hidden"
-							type="checkbox"
 							:disabled="app.protected"
-							:title="app.protected ? t('framaspace', 'This application cannot be hidden') : ''">
+							:title="app.protected ? t('framaspace', 'This application cannot be hidden') : ''" />
 					</td>
 				</tr>
 			</tbody>
@@ -30,6 +29,7 @@
 import { ref, onMounted } from 'vue'
 import axios from '@nextcloud/axios'
 import { showSuccess, showError } from '@nextcloud/dialogs'
+import { NcCheckboxRadioSwitch } from '@nextcloud/vue'
 import '@nextcloud/dialogs/style.css'
 
 const apps = ref([])
@@ -115,10 +115,6 @@ const save = async () => {
 		padding: 15px;
 		border-radius: 4px;
 		margin-top: 20px;
-	}
-
-	input[type="checkbox"] {
-		margin-right: 8px;
 	}
 
 	label {
