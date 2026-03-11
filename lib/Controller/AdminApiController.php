@@ -15,20 +15,18 @@ use OCP\IUserSession;
  * @psalm-suppress UnusedClass
  */
 class AdminApiController extends Controller {
-	private IAppManager $appManager;
-	private ConfigProxy $config;
-	private IUserSession $userSession;
-	private INavigationManager $navigationManager;
-
 	/**
 	 * @psalm-suppress PossiblyUnusedMethod
 	 */
-	public function __construct(string $AppName, IRequest $request, IAppManager $appManager, ConfigProxy $config, IUserSession $userSession, INavigationManager $navigationManager) {
+	public function __construct(
+		string $AppName,
+		IRequest $request,
+		private IAppManager $appManager,
+		private ConfigProxy $config,
+		private IUserSession $userSession,
+		private INavigationManager $navigationManager,
+	) {
 		parent::__construct($AppName, $request);
-		$this->appManager = $appManager;
-		$this->config = $config;
-		$this->userSession = $userSession;
-		$this->navigationManager = $navigationManager;
 	}
 
 	#[NoCSRFRequired]

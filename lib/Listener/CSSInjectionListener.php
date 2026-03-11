@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace OCA\FramaSpace\Listener;
 
-use OCA\FramaSpace\AppInfo\Application;
 use OCA\FramaSpace\Service\ConfigProxy;
 use OCP\AppFramework\Http\Events\BeforeTemplateRenderedEvent;
 use OCP\EventDispatcher\Event;
