@@ -13,8 +13,8 @@ use OCP\Settings\IIconSection;
 class AdminSection implements IIconSection {
 	/** @psalm-suppress PossiblyUnusedMethod */
 	public function __construct(
-		protected IURLGenerator $url,
-		protected IL10N $l,
+		private IURLGenerator $url,
+		private IL10N $l,
 	) {
 	}
 
