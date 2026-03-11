@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace OCA\FramaSpace\Listener;
 
 use OCA\FramaSpace\AppInfo\Application;
+use OCA\FramaSpace\Service\ConfigProxy;
 use OCP\AppFramework\Http\Events\BeforeTemplateRenderedEvent;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
-use OCP\IConfig;
 use OCP\Util;
-use Psr\Log\LoggerInterface;
 
 /**
  * @implements IEventListener<BeforeTemplateRenderedEvent>
@@ -21,8 +20,7 @@ class CSSInjectionListener implements IEventListener {
 	 * @psalm-suppress PossiblyUnusedMethod
 	 */
 	public function __construct(
-		private IConfig $config,
-		private LoggerInterface $logger,
+		private ConfigProxy $configProxy,
 	) {
 	}
 
@@ -31,20 +29,8 @@ class CSSInjectionListener implements IEventListener {
 			return;
 		}
 
-		/** @psalm-suppress DeprecatedMethod */
-		$hiddenAppsJson = $this->config->getAppValue(Application::APP_ID, 'hidden_apps', '[]');
-		try {
-			$decoded = json_decode($hiddenAppsJson, true, 512, JSON_THROW_ON_ERROR);
-		} catch (\JsonException $e) {
-			$this->logger->error('Failed to decode hidden apps configuration', ['exception' => $e]);
-			return;
-		}
-
-		if (!is_array($decoded)) {
-			$this->logger->warning('Hidden apps configuration is not an array');
-			return;
-		}
-		$hiddenApps = array_filter($decoded, fn ($appId) => is_string($appId) && !empty($appId));
+		$hiddenApps = $this->configProxy->getAppValueArray('hidden_apps');
+		$hiddenApps = array_filter($hiddenApps, fn ($appId) => is_string($appId) && !empty($appId));
 
 		if (empty($hiddenApps)) {
 			return;
