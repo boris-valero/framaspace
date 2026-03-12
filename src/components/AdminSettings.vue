@@ -19,9 +19,11 @@
 				</tr>
 			</tbody>
 		</table>
-		<button type="submit">
-			{{ t('framaspace', 'Save') }}
-		</button>
+		<div class="form-actions">
+			<NcButton type="primary" native-type="submit">
+				{{ t('framaspace', 'Save') }}
+			</NcButton>
+		</div>
 	</form>
 </template>
 
@@ -29,7 +31,7 @@
 import { ref, onMounted } from 'vue'
 import axios from '@nextcloud/axios'
 import { showSuccess, showError } from '@nextcloud/dialogs'
-import { NcCheckboxRadioSwitch } from '@nextcloud/vue'
+import { NcCheckboxRadioSwitch, NcButton } from '@nextcloud/vue'
 import '@nextcloud/dialogs/style.css'
 
 const apps = ref([])
@@ -60,31 +62,31 @@ const save = async () => {
 	max-width: 700px;
 
 	.feature-description {
-		background-color: #e3f2fd;
-		border: 1px solid #2196f3;
-		color: #0d47a1;
-		padding: 15px;
-		border-radius: 4px;
-		margin-bottom: 20px;
+		background-color: var(--color-info);
+		border: var(--border-width-input) solid var(--color-border);
+		color: var(--color-info-text);
+		padding: calc(var(--default-grid-baseline) * 4);
+		border-radius: var(--border-radius-small);
+		margin-bottom: calc(var(--default-grid-baseline) * 5);
 
 		p {
 			margin: 0;
-			line-height: 1.5;
+			line-height: var(--default-line-height);
 		}
 	}
 
 	table {
 		width: 100%;
 		border-collapse: collapse;
-		margin: 20px 0;
+		margin: calc(var(--default-grid-baseline) * 5) 0;
 		table-layout: fixed;
 	}
 
 	th,
 	td {
-		padding: 15px 15px;
+		padding: calc(var(--default-grid-baseline) * 4);
 		text-align: left;
-		border-bottom: 1px solid #eee;
+		border-bottom: var(--border-width-input) solid var(--color-border);
 		vertical-align: middle;
 	}
 
@@ -100,21 +102,21 @@ const save = async () => {
 	}
 
 	th {
-		background-color: #f5f5f5;
+		background-color: var(--color-background-hover);
 		font-weight: bold;
 	}
 
 	.form-actions {
-		margin: 20px 0;
+		margin: calc(var(--default-grid-baseline) * 5) 0;
 	}
 
 	.info-box {
-		background-color: #d4edda;
-		border: 1px solid #c3e6cb;
-		color: #FFFF00;
-		padding: 15px;
-		border-radius: 4px;
-		margin-top: 20px;
+		background-color: var(--color-success);
+		border: var(--border-width-input) solid var(--color-border);
+		color: var(--color-success-text);
+		padding: calc(var(--default-grid-baseline) * 4);
+		border-radius: var(--border-radius-small);
+		margin-top: calc(var(--default-grid-baseline) * 5);
 	}
 
 	label {
