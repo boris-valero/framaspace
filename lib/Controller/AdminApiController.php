@@ -17,6 +17,8 @@ use OCP\IUserSession;
  * @psalm-suppress UnusedClass
  */
 class AdminApiController extends Controller {
+	private const PROTECTED_APPS = ['files', 'activity'];
+
 	/**
 	 * @psalm-suppress PossiblyUnusedMethod
 	 */
@@ -35,7 +37,6 @@ class AdminApiController extends Controller {
 	public function getApps(): DataResponse {
 		$navigationEntries = $this->navigationManager->getAll();
 		$hiddenApps = $this->config->getAppValueArray('hidden_apps');
-		$protectedApps = ['files', 'activity'];
 		/** @var array<array<string, mixed>> $appsData */
 		$appsData = [];
 		$user = $this->userSession->getUser();
@@ -49,7 +50,7 @@ class AdminApiController extends Controller {
 					'id' => $appId,
 					'name' => (string)($entry['name'] ?? $appId),
 					'hidden' => in_array($appId, $hiddenApps),
-					'protected' => in_array($appId, $protectedApps)
+					'protected' => in_array($appId, self::PROTECTED_APPS)
 				];
 			}
 		}
@@ -60,14 +61,13 @@ class AdminApiController extends Controller {
 	public function setHidden(): DataResponse {
 		$params = $this->request->getParams();
 		$hidden = isset($params['hidden']) ? (array)$params['hidden'] : [];
-		$protectedApps = ['files', 'activity'];
 
 		// Validate all items are strings
 		$validatedApps = array_values(array_filter($hidden, 'is_string'));
 
 		// Filter out protected apps
-		$filteredApps = array_diff($validatedApps, $protectedApps);
-		$ignoredProtected = array_intersect($validatedApps, $protectedApps);
+		$filteredApps = array_diff($validatedApps, self::PROTECTED_APPS);
+		$ignoredProtected = array_intersect($validatedApps, self::PROTECTED_APPS);
 
 		$this->config->setAppValueArray('hidden_apps', $filteredApps);
 
