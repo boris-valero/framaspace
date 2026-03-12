@@ -19,4 +19,12 @@ class PageController extends Controller {
 	public function index(): RedirectResponse {
 		return new RedirectResponse('https://forum.frama.space/t/centre-de-ressources/71');
 	}
+
+	#[NoCSRFRequired]
+	#[NoAdminRequired]
+	#[OpenAPI(OpenAPI::SCOPE_IGNORE)]
+	#[FrontpageRoute(verb: 'GET', url: '/admin')]
+	public function admin(): RedirectResponse {
+		return new RedirectResponse('https://forum.frama.space/t/premiers-pas-pour-les-personnes-administratrices-dun-espace-frama-space/74');
+	}
 }
