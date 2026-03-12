@@ -61,20 +61,6 @@ const save = async () => {
 #framaspace-admin-settings {
 	max-width: 700px;
 
-	.feature-description {
-		background-color: var(--color-info);
-		border: var(--border-width-input) solid var(--color-border);
-		color: var(--color-info-text);
-		padding: calc(var(--default-grid-baseline) * 4);
-		border-radius: var(--border-radius-small);
-		margin-bottom: calc(var(--default-grid-baseline) * 5);
-
-		p {
-			margin: 0;
-			line-height: var(--default-line-height);
-		}
-	}
-
 	table {
 		width: 100%;
 		border-collapse: collapse;
@@ -108,15 +94,6 @@ const save = async () => {
 
 	.form-actions {
 		margin: calc(var(--default-grid-baseline) * 5) 0;
-	}
-
-	.info-box {
-		background-color: var(--color-success);
-		border: var(--border-width-input) solid var(--color-border);
-		color: var(--color-success-text);
-		padding: calc(var(--default-grid-baseline) * 4);
-		border-radius: var(--border-radius-small);
-		margin-top: calc(var(--default-grid-baseline) * 5);
 	}
 
 	label {
