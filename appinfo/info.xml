@@ -29,7 +29,7 @@
 		</navigation>
 		<navigation role="admin">
 			<name>Aide Administrateurs</name>
-			<route>framaspace.pageadmin.index</route>
+			<route>framaspace.page.admin</route>
 			<icon>help.svg</icon>
 			<order>1</order>
 			<type>settings</type>

@@ -32,6 +32,7 @@ import { ref, onMounted } from 'vue'
 import axios from '@nextcloud/axios'
 import { showSuccess, showError } from '@nextcloud/dialogs'
 import { NcCheckboxRadioSwitch, NcButton } from '@nextcloud/vue'
+import { t } from '@nextcloud/l10n'
 import '@nextcloud/dialogs/style.css'
 
 const apps = ref([])
