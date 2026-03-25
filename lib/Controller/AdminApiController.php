@@ -59,8 +59,8 @@ class AdminApiController extends Controller {
 
 	#[NoCSRFRequired]
 	public function setHidden(): DataResponse {
-		$params = $this->request->getParams();
-		$hidden = isset($params['hidden']) ? (array)$params['hidden'] : [];
+		$hiddenParam = $this->request->getParam('hidden', []);
+		$hidden = is_array($hiddenParam) ? $hiddenParam : [];
 
 		// Validate all items are strings
 		$validatedApps = array_values(array_filter($hidden, 'is_string'));

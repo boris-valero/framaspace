@@ -48,7 +48,8 @@ class CSSInjectionListener implements IEventListener {
 
 		/** @var string $appId */
 		foreach ($hiddenApps as $appId) {
-			$css .= ".app-menu-entry:has(a.app-menu-entry__link[href\$=\"/apps/{$appId}/\"]) { display: none; }";
+			// Use CSS escaped slashes to avoid quote escaping in injected style headers.
+			$css .= ".app-menu-entry:has(a.app-menu-entry__link[href\$=\\2f apps\\2f {$appId}\\2f ]) { display: none; }";
 		}
 
 		return $css;

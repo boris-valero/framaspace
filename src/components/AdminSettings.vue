@@ -36,10 +36,13 @@ import { t } from '@nextcloud/l10n'
 import '@nextcloud/dialogs/style.css'
 
 const apps = ref([])
+const baseUrl = window.location.origin
+const appsUrl = `${baseUrl}/index.php/apps/framaspace/api/admin/apps`
+const hiddenUrl = `${baseUrl}/index.php/apps/framaspace/api/admin/hidden`
 
 onMounted(async () => {
 	try {
-		const response = await axios.get('/apps/framaspace/api/admin/apps')
+		const response = await axios.get(appsUrl)
 		apps.value = response.data
 	} catch (e) {
 		showError(t('framaspace', 'Loading error'))
@@ -48,8 +51,15 @@ onMounted(async () => {
 
 const save = async () => {
 	try {
-		await axios.post('/apps/framaspace/api/admin/hidden', {
-			hidden: apps.value.filter(a => a.hidden).map(a => a.id),
+		const payload = new URLSearchParams()
+		apps.value
+			.filter(a => a.hidden)
+			.forEach((a) => payload.append('hidden[]', a.id))
+
+		await axios.post(hiddenUrl, payload, {
+			headers: {
+				'Content-Type': 'application/x-www-form-urlencoded',
+			},
 		})
 		showSuccess(t('framaspace', 'Saved!'))
 	} catch (e) {
