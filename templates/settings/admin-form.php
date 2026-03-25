@@ -7,7 +7,7 @@
  */
 
 script('framaspace', 'framaspace-admin-settings');
-style('framaspace', 'framaspace-admin-form');
+style('framaspace', 'framaspace-admin-settings');
 ?>
 
 <div id="framaspace-admin-settings"></div>

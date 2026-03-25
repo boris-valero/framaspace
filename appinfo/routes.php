@@ -11,12 +11,12 @@ return [
 	'resources' => [],
 	'routes' => [
 		[
-			'name' => 'adminapi#getApps',
+			'name' => 'adminApi#getApps',
 			'url' => '/api/admin/apps',
 			'verb' => 'GET'
 		],
 		[
-			'name' => 'adminapi#setHidden',
+			'name' => 'adminApi#setHidden',
 			'url' => '/api/admin/hidden',
 			'verb' => 'POST'
 		],
