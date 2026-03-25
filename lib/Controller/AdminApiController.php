@@ -59,6 +59,7 @@ class AdminApiController extends Controller {
 
 	#[NoCSRFRequired]
 	public function setHidden(): DataResponse {
+		/** @psalm-suppress MixedAssignment */
 		$hiddenParam = $this->request->getParam('hidden', []);
 		$hidden = is_array($hiddenParam) ? $hiddenParam : [];
 
