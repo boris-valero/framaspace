@@ -13,7 +13,6 @@ use OCP\AppFramework\Http\RedirectResponse;
 
 class PageController extends Controller {
 	#[NoCSRFRequired]
-	#[NoAdminRequired]
 	#[OpenAPI(OpenAPI::SCOPE_IGNORE)]
 	#[FrontpageRoute(verb: 'GET', url: '/')]
 	public function index(): RedirectResponse {
@@ -21,7 +20,6 @@ class PageController extends Controller {
 	}
 
 	#[NoCSRFRequired]
-	#[NoAdminRequired]
 	#[OpenAPI(OpenAPI::SCOPE_IGNORE)]
 	#[FrontpageRoute(verb: 'GET', url: '/admin')]
 	public function admin(): RedirectResponse {
