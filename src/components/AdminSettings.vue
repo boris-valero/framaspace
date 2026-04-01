@@ -33,12 +33,12 @@ import axios from '@nextcloud/axios'
 import { showSuccess, showError } from '@nextcloud/dialogs'
 import { NcCheckboxRadioSwitch, NcButton } from '@nextcloud/vue'
 import { t } from '@nextcloud/l10n'
+import { generateUrl } from '@nextcloud/router'
 import '@nextcloud/dialogs/style.css'
 
 const apps = ref([])
-const baseUrl = window.location.origin
-const appsUrl = `${baseUrl}/index.php/apps/framaspace/api/admin/apps`
-const hiddenUrl = `${baseUrl}/index.php/apps/framaspace/api/admin/hidden`
+const appsUrl = generateUrl('/apps/framaspace/api/admin/apps')
+const hiddenUrl = generateUrl('/apps/framaspace/api/admin/hidden')
 
 onMounted(async () => {
 	try {
